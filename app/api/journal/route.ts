@@ -18,7 +18,7 @@ The journal entry should capture the essence of what the user shared and any gro
 
   try {
     const { text } = await generateText({
-      model: openai("gpt-4o"),
+      model: openai("gpt-4.1-nano"),
       system: systemPrompt,
       prompt: `Create a journal entry based on this conversation. User's mood: ${mood || "Not specified"}
 

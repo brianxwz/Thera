@@ -38,7 +38,7 @@ Important guidelines:
 Remember: You are a supportive companion, not a replacement for professional mental health care. Always encourage users to seek professional help if they're experiencing severe distress, thoughts of self-harm, or mental health crises.${contextPrompt}`
 
   const result = streamText({
-    model: openai("gpt-4o"),
+    model: openai("gpt-4.1-nano"),
     system: systemPrompt,
     messages,
   })

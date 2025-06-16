@@ -35,8 +35,8 @@ export function InteractiveTutorial({
   const [currentStep, setCurrentStep] = useState(0)
   const [isVisible, setIsVisible] = useState(false)
   const [targetElement, setTargetElement] = useState<HTMLElement | null>(null)
-  const [tooltipPosition, setTooltipPosition] = useState({ top: 0, left: 0 })
-  const overlayRef = useRef<HTMLDivElement>(null)
+  const [tooltipPosition, setTooltipPosition] = useState({ top: 0, left: 0, transform: "" })
+  const tooltipRef = useRef<HTMLDivElement>(null)
 
   const tutorialSteps: TutorialStep[] = [
     {
@@ -289,6 +289,31 @@ export function InteractiveTutorial({
     }
   }, [currentStep, currentSection])
 
+  useEffect(() => {
+    if (isActive) {
+      // Prevent scrolling
+      document.body.style.overflow = 'hidden'
+      // Prevent touch events
+      document.body.style.touchAction = 'none'
+      // Prevent selection
+      document.body.style.userSelect = 'none'
+    } else {
+      // Restore scrolling
+      document.body.style.overflow = ''
+      // Restore touch events
+      document.body.style.touchAction = ''
+      // Restore selection
+      document.body.style.userSelect = ''
+    }
+
+    return () => {
+      // Cleanup: restore scrolling and touch events
+      document.body.style.overflow = ''
+      document.body.style.touchAction = ''
+      document.body.style.userSelect = ''
+    }
+  }, [isActive])
+
   const updateTargetElement = () => {
     const step = tutorialSteps[currentStep]
     if (step.targetSelector) {
@@ -311,31 +336,61 @@ export function InteractiveTutorial({
 
     let top = 0
     let left = 0
+    let transform = ""
 
     switch (position) {
       case "top":
         top = rect.top + scrollTop - 10
         left = rect.left + scrollLeft + rect.width / 2
+        transform = "translate(-50%, -100%)"
         break
       case "bottom":
         top = rect.bottom + scrollTop + 10
         left = rect.left + scrollLeft + rect.width / 2
+        transform = "translate(-50%, 0)"
         break
       case "left":
         top = rect.top + scrollTop + rect.height / 2
         left = rect.left + scrollLeft - 10
+        transform = "translate(-100%, -50%)"
         break
       case "right":
         top = rect.top + scrollTop + rect.height / 2
         left = rect.right + scrollLeft + 10
+        transform = "translate(0, -50%)"
         break
       case "center":
-        top = window.innerHeight / 2 + scrollTop
-        left = window.innerWidth / 2 + scrollLeft
+        top = rect.top + scrollTop + rect.height / 2
+        left = rect.left + scrollLeft + rect.width / 2
+        transform = "translate(-50%, -50%)"
         break
     }
 
-    setTooltipPosition({ top, left })
+    // Ensure tooltip stays within viewport
+    const tooltip = tooltipRef.current
+    if (tooltip) {
+      const tooltipRect = tooltip.getBoundingClientRect()
+      const viewportWidth = window.innerWidth
+      const viewportHeight = window.innerHeight
+
+      // Adjust horizontal position if tooltip would overflow
+      if (left + tooltipRect.width > viewportWidth) {
+        left = viewportWidth - tooltipRect.width - 20
+      }
+      if (left < 20) {
+        left = 20
+      }
+
+      // Adjust vertical position if tooltip would overflow
+      if (top + tooltipRect.height > viewportHeight + scrollTop) {
+        top = viewportHeight + scrollTop - tooltipRect.height - 20
+      }
+      if (top < scrollTop + 20) {
+        top = scrollTop + 20
+      }
+    }
+
+    setTooltipPosition({ top, left, transform })
   }
 
   const highlightElement = (element: HTMLElement) => {
@@ -369,7 +424,7 @@ export function InteractiveTutorial({
   }
 
   const removeHighlight = () => {
-    const highlighted = document.querySelector(".tutorial-highlight")
+    const highlighted = document.querySelector(".tutorial-highlight") as HTMLElement
     if (highlighted) {
       highlighted.classList.remove("tutorial-highlight")
       highlighted.style.position = ""
@@ -419,112 +474,107 @@ export function InteractiveTutorial({
 
   return (
     <>
-      {/* Overlay */}
-      <div
-        ref={overlayRef}
-        className="fixed inset-0 bg-black/50 z-[1000] pointer-events-none"
-        style={{ pointerEvents: targetElement ? "none" : "auto" }}
-      />
-
-      {/* Tooltip */}
-      <div
-        className={`fixed z-[1002] transition-all duration-300 ${
-          isCenterPosition ? "transform -translate-x-1/2 -translate-y-1/2" : ""
-        }`}
-        style={{
-          top: tooltipPosition.top,
-          left: tooltipPosition.left,
-          transform: isCenterPosition
-            ? "translate(-50%, -50%)"
-            : currentStepData.position === "right"
-              ? "translateY(-50%)"
-              : currentStepData.position === "left"
-                ? "translate(-100%, -50%)"
-                : currentStepData.position === "top"
-                  ? "translate(-50%, -100%)"
-                  : "translate(-50%, 0%)",
-        }}
-      >
-        <Card className={`shadow-2xl border-2 border-purple-200 max-w-sm ${isCenterPosition ? "max-w-md" : ""}`}>
-          <CardContent className="p-0">
-            {/* Header */}
-            <div className="bg-gradient-to-r from-purple-500 to-pink-500 text-white p-4 rounded-t-lg">
-              <div className="flex items-center justify-between mb-2">
-                <div className="flex items-center gap-2">
-                  <Target className="h-5 w-5" />
-                  <h3 className="font-bold text-lg">{currentStepData.title}</h3>
-                </div>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={handleSkip}
-                  className="text-white hover:bg-white/20 h-8 w-8 p-0"
-                >
-                  <X className="h-4 w-4" />
-                </Button>
-              </div>
-              <p className="text-purple-100 text-sm">{currentStepData.description}</p>
-            </div>
-
-            {/* Content */}
-            <div className="bg-white dark:bg-gray-800">{currentStepData.content}</div>
-
-            {/* Footer */}
-            <div className="p-4 bg-gray-50 dark:bg-gray-700 rounded-b-lg border-t">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <Badge variant="outline" className="text-xs">
-                    Step {currentStep + 1} of {tutorialSteps.length}
-                  </Badge>
-                  {currentStepData.action && currentStepData.action !== "none" && (
-                    <Badge className="text-xs bg-blue-100 text-blue-700">
-                      {currentStepData.action === "click" && "👆 Click"}
-                      {currentStepData.action === "hover" && "🖱️ Hover"}
-                      {currentStepData.action === "type" && "⌨️ Type"}
-                    </Badge>
-                  )}
-                </div>
-
-                <div className="flex items-center gap-2">
-                  {currentStep > 0 && (
-                    <Button variant="outline" size="sm" onClick={handlePrevious}>
-                      <ArrowLeft className="h-4 w-4 mr-1" />
-                      Back
-                    </Button>
-                  )}
-                  <Button
-                    size="sm"
-                    onClick={handleNext}
-                    className={
-                      isLastStep
-                        ? "bg-gradient-to-r from-green-500 to-blue-500 hover:from-green-600 hover:to-blue-600 text-white"
-                        : "bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white"
-                    }
-                  >
-                    {isLastStep ? "Complete" : "Next"}
-                    {!isLastStep && <ArrowRight className="h-4 w-4 ml-1" />}
-                  </Button>
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Arrow pointer for non-center positions */}
-        {!isCenterPosition && (
-          <div
-            className={`absolute w-0 h-0 ${
-              currentStepData.position === "top"
-                ? "border-l-8 border-r-8 border-t-8 border-l-transparent border-r-transparent border-t-white top-full left-1/2 transform -translate-x-1/2"
-                : currentStepData.position === "bottom"
-                  ? "border-l-8 border-r-8 border-b-8 border-l-transparent border-r-transparent border-b-white bottom-full left-1/2 transform -translate-x-1/2"
-                  : currentStepData.position === "left"
-                    ? "border-t-8 border-b-8 border-l-8 border-t-transparent border-b-transparent border-l-white left-full top-1/2 transform -translate-y-1/2"
-                    : "border-t-8 border-b-8 border-r-8 border-t-transparent border-b-transparent border-r-white right-full top-1/2 transform -translate-y-1/2"
-            }`}
+      {isActive && (
+        <div className="fixed inset-0 z-[100]">
+          <div 
+            className="absolute inset-0 bg-black/50 pointer-events-auto" 
+            onClick={(e) => e.preventDefault()}
+            onMouseDown={(e) => e.preventDefault()}
+            onTouchStart={(e) => e.preventDefault()}
+            onWheel={(e) => e.preventDefault()}
+            onScroll={(e) => e.preventDefault()}
           />
-        )}
-      </div>
+          <div
+            ref={tooltipRef}
+            className="absolute z-[101] bg-white dark:bg-gray-800 rounded-lg shadow-xl p-4 max-w-sm pointer-events-auto"
+            style={{
+              top: tooltipPosition.top,
+              left: tooltipPosition.left,
+              transform: tooltipPosition.transform,
+            }}
+          >
+            <Card className={`shadow-2xl border-2 border-purple-200 max-w-sm ${isCenterPosition ? "max-w-md" : ""}`}>
+              <CardContent className="p-0">
+                {/* Header */}
+                <div className="bg-gradient-to-r from-purple-500 to-pink-500 text-white p-4 rounded-t-lg">
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center gap-2">
+                      <Target className="h-5 w-5" />
+                      <h3 className="font-bold text-lg">{currentStepData.title}</h3>
+                    </div>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={handleSkip}
+                      className="text-white hover:bg-white/20 h-8 w-8 p-0"
+                    >
+                      <X className="h-4 w-4" />
+                    </Button>
+                  </div>
+                  <p className="text-purple-100 text-sm">{currentStepData.description}</p>
+                </div>
+
+                {/* Content */}
+                <div className="bg-white dark:bg-gray-800">{currentStepData.content}</div>
+
+                {/* Footer */}
+                <div className="p-4 bg-gray-50 dark:bg-gray-700 rounded-b-lg border-t">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <Badge variant="outline" className="text-xs">
+                        Step {currentStep + 1} of {tutorialSteps.length}
+                      </Badge>
+                      {currentStepData.action && currentStepData.action !== "none" && (
+                        <Badge className="text-xs bg-blue-100 text-blue-700">
+                          {currentStepData.action === "click" && "👆 Click"}
+                          {currentStepData.action === "hover" && "🖱️ Hover"}
+                          {currentStepData.action === "type" && "⌨️ Type"}
+                        </Badge>
+                      )}
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                      {currentStep > 0 && (
+                        <Button variant="outline" size="sm" onClick={handlePrevious}>
+                          <ArrowLeft className="h-4 w-4 mr-1" />
+                          Back
+                        </Button>
+                      )}
+                      <Button
+                        size="sm"
+                        onClick={handleNext}
+                        className={
+                          isLastStep
+                            ? "bg-gradient-to-r from-green-500 to-blue-500 hover:from-green-600 hover:to-blue-600 text-white"
+                            : "bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white"
+                        }
+                      >
+                        {isLastStep ? "Complete" : "Next"}
+                        {!isLastStep && <ArrowRight className="h-4 w-4 ml-1" />}
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Arrow pointer for non-center positions */}
+            {!isCenterPosition && (
+              <div
+                className={`absolute w-0 h-0 ${
+                  currentStepData.position === "top"
+                    ? "border-l-8 border-r-8 border-t-8 border-l-transparent border-r-transparent border-t-white top-full left-1/2 transform -translate-x-1/2"
+                    : currentStepData.position === "bottom"
+                      ? "border-l-8 border-r-8 border-b-8 border-l-transparent border-r-transparent border-b-white bottom-full left-1/2 transform -translate-x-1/2"
+                      : currentStepData.position === "left"
+                        ? "border-t-8 border-b-8 border-l-8 border-t-transparent border-b-transparent border-l-white left-full top-1/2 transform -translate-y-1/2"
+                        : "border-t-8 border-b-8 border-r-8 border-t-transparent border-b-transparent border-r-white right-full top-1/2 transform -translate-y-1/2"
+                }`}
+              />
+            )}
+          </div>
+        </div>
+      )}
     </>
   )
 }

@@ -95,13 +95,15 @@ export default function WellnessCompanion() {
     // Check if user has completed onboarding
     const hasCompletedOnboarding = localStorage.getItem("wellness-onboarding-completed")
     if (!hasCompletedOnboarding) {
-      setShowTutorial(true)
+      // TODO: Uncomment this when we have a tutorial
+      //setShowTutorial(true)
     }
   }, [])
 
   useEffect(() => {
     const handleGetStarted = () => {
-      setShowTutorial(true)
+      // TODO: Uncomment this when we have a tutorial
+      //setShowTutorial(true)
     }
 
     window.addEventListener("get-started", handleGetStarted)
@@ -297,6 +299,7 @@ export default function WellnessCompanion() {
               Start Your Journey
               <Heart className="h-5 w-5 ml-2" />
             </Button>
+            {/* TODO: Uncomment this when we have a tutorial
             <Button
               onClick={() => setShowTutorial(true)}
               variant="outline"
@@ -305,7 +308,7 @@ export default function WellnessCompanion() {
             >
               Take the Tour
               <Play className="h-5 w-5 ml-2" />
-            </Button>
+            </Button> */}
           </div>
         </div>
       </div>
@@ -786,6 +789,7 @@ export default function WellnessCompanion() {
 
       <div className="flex-1 bg-white p-6 dark:bg-gray-800">
         <div className="space-y-6">
+          {/* TODO: Uncomment this when we have a tutorial
           <Card className="p-6 dark:bg-gray-700 dark:border-gray-600">
             <h3 className="text-lg font-semibold text-gray-800 mb-4 dark:text-white">Tutorial & Help</h3>
             <p className="text-gray-600 mb-4 dark:text-gray-300">
@@ -798,7 +802,7 @@ export default function WellnessCompanion() {
               <Play className="h-4 w-4 mr-2" />
               Restart Tutorial
             </Button>
-          </Card>
+          </Card> */}
 
           <Card className="p-6 dark:bg-gray-700 dark:border-gray-600">
             <h3 className="text-lg font-semibold text-gray-800 mb-4 dark:text-white">Data & Privacy</h3>

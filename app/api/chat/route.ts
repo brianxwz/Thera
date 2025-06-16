@@ -1,21 +1,24 @@
-import { openai } from "@ai-sdk/openai"
-import { streamText } from "ai"
+import { OpenAI } from 'openai'
+import { NextResponse } from 'next/server'
 
-export const maxDuration = 30
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY,
+})
 
 export async function POST(req: Request) {
-  const { messages, journalContext } = await req.json()
+  try {
+    const { messages, journalContext } = await req.json()
 
-  const contextPrompt =
+    const contextPrompt =
     journalContext && journalContext.length > 0
       ? `\n\nContext from user's previous journal entries:\n${journalContext
-          .map((entry: any) => `- ${new Date(entry.date).toLocaleDateString()}: ${entry.content.substring(0, 200)}...`)
-          .join(
-            "\n",
-          )}\n\nUse this context to provide more personalized support, but don't explicitly mention that you're referencing their journal unless relevant.`
+        .map((entry: any) => `- ${new Date(entry.date).toLocaleDateString()}: ${entry.content.substring(0, 200)}...`)
+        .join(
+          "\n",
+        )}\n\nUse this context to provide more personalized support, but don't explicitly mention that you're referencing their journal unless relevant.`
       : ""
 
-  const systemPrompt = `You are a compassionate and supportive wellness companion. Your role is to:
+    const systemPrompt = `You are a compassionate and supportive wellness companion. Your role is to:
 
 1. Validate feelings and emotions without judgment
 2. Provide gentle reassurance and perspective
@@ -37,11 +40,24 @@ Important guidelines:
 
 Remember: You are a supportive companion, not a replacement for professional mental health care. Always encourage users to seek professional help if they're experiencing severe distress, thoughts of self-harm, or mental health crises.${contextPrompt}`
 
-  const result = streamText({
-    model: openai("gpt-4.1-nano"),
-    system: systemPrompt,
-    messages,
-  })
+    const response = await openai.chat.completions.create({
+      model: "gpt-4.1-nano",
+      messages: [
+        { role: "system", content: systemPrompt },
+        ...messages
+      ],
+      temperature: 0.7,
+      max_tokens: 500,
+    })
 
-  return result.toDataStreamResponse()
+    return NextResponse.json({ 
+      message: response.choices[0].message 
+    })
+  } catch (error) {
+    console.error('Chat API Error:', error)
+    return NextResponse.json(
+      { error: 'Failed to process chat message' },
+      { status: 500 }
+    )
+  }
 }

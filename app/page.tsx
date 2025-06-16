@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { useChat } from "ai/react"
+import { useChat } from "@ai-sdk/react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent } from "@/components/ui/card"
@@ -301,7 +301,7 @@ export default function WellnessCompanion() {
               onClick={() => setShowTutorial(true)}
               variant="outline"
               size="lg"
-              className="border-white/30 text-white hover:bg-white/20 backdrop-blur-sm px-8 py-4 text-lg font-semibold"
+              className="border-white/30 text-white hover:bg-white/20 backdrop-blur-sm px-8 py-4 text-lg font-semibold hover:scale-105"
             >
               Take the Tour
               <Play className="h-5 w-5 ml-2" />
@@ -869,12 +869,12 @@ export default function WellnessCompanion() {
           </div>
 
           {/* Navigation Items */}
-          <div className="p-2 space-y-1">
+          <div className="p-3 space-y-1">
             {navigationItems.map((item) => (
               <div key={item.id} className="relative">
                 <Button
                   variant="ghost"
-                  className={`tutorial-nav-${item.id} w-full justify-start h-12 transition-all duration-200 ${
+                  className={`tutorial-nav-${item.id} w-full justify-start h-10 transition-all duration-200 ${
                     activeSection === item.id
                       ? "bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg"
                       : "hover:bg-purple-50 text-gray-700 dark:text-gray-300 dark:hover:bg-gray-700"

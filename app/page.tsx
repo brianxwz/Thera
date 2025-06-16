@@ -301,7 +301,7 @@ export default function WellnessCompanion() {
               onClick={() => setShowTutorial(true)}
               variant="outline"
               size="lg"
-              className="border-white/30 text-white hover:bg-white/20 backdrop-blur-sm px-8 py-4 text-lg font-semibold hover:scale-105"
+              className="border-white/30 text-white backdrop-blur-sm px-8 py-4 text-lg font-semibold hover:scale-105"
             >
               Take the Tour
               <Play className="h-5 w-5 ml-2" />
@@ -462,17 +462,17 @@ export default function WellnessCompanion() {
       </div>
 
       {/* Important Notice */}
-      <div className="bg-gradient-to-r from-amber-50 to-orange-50 border-t border-amber-200 py-12">
+      <div className="bg-gradient-to-r from-amber-50 to-orange-50 border-t border-amber-200 py-12 dark:from-amber-900/50 dark:to-orange-900/50 dark:border-amber-800">
         <div className="max-w-4xl mx-auto px-8">
           <div className="flex items-start gap-6">
-            <AlertCircle className="h-8 w-8 text-amber-600 mt-1 flex-shrink-0" />
+            <AlertCircle className="h-8 w-8 text-amber-600 mt-1 flex-shrink-0 dark:text-amber-400" />
             <div>
-              <h4 className="text-xl font-semibold text-amber-800 mb-3">Important Notice</h4>
-              <p className="text-amber-700 leading-relaxed mb-4">
+              <h4 className="text-xl font-semibold text-amber-800 mb-3 dark:text-amber-200">Important Notice</h4>
+              <p className="text-amber-700 leading-relaxed mb-4 dark:text-amber-300">
                 This wellness companion provides emotional support and helps you process your thoughts and feelings.
                 It's designed to complement, not replace, professional mental health care.
               </p>
-              <p className="text-amber-700 leading-relaxed">
+              <p className="text-amber-700 leading-relaxed dark:text-amber-300">
                 <strong>
                   If you're experiencing severe distress, thoughts of self-harm, or mental health crises, please seek
                   professional help immediately.
@@ -876,7 +876,7 @@ export default function WellnessCompanion() {
                   variant="ghost"
                   className={`tutorial-nav-${item.id} w-full justify-start h-10 transition-all duration-200 ${
                     activeSection === item.id
-                      ? "bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg"
+                      ? "bg-gradient-to-r from-purple-500 to-pink-500 shadow-lg"
                       : "hover:bg-purple-50 text-gray-700 dark:text-gray-300 dark:hover:bg-gray-700"
                   } ${!(sidebarHovered || sidebarOpen) ? "px-3" : "px-4"}`}
                   onClick={() => {
@@ -889,7 +889,7 @@ export default function WellnessCompanion() {
                     <span className="ml-3 whitespace-nowrap overflow-hidden">{item.label}</span>
                   )}
                   {item.badge && (sidebarHovered || sidebarOpen) && (
-                    <Badge variant="secondary" className="ml-auto bg-purple-100 text-purple-700 text-xs">
+                    <Badge variant="secondary" className="ml-auto bg-purple-100 text-purple-700 text-xs dark:bg-purple-900 dark:text-purple-100">
                       {item.badge > 99 ? "99+" : item.badge}
                     </Badge>
                   )}
@@ -918,10 +918,10 @@ export default function WellnessCompanion() {
           {/* Bottom disclaimer - only show when expanded */}
           {(sidebarHovered || sidebarOpen) && (
             <div className="absolute bottom-4 left-2 right-2">
-              <div className="p-3 bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-lg">
+              <div className="p-3 bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-lg dark:from-amber-900/50 dark:to-orange-900/50 dark:border-amber-800">
                 <div className="flex items-start gap-2">
-                  <AlertCircle className="h-3 w-3 text-amber-600 mt-0.5 flex-shrink-0" />
-                  <div className="text-xs text-amber-800">
+                  <AlertCircle className="h-3 w-3 text-amber-600 dark:text-amber-400 mt-0.5 flex-shrink-0" />
+                  <div className="text-xs text-amber-800 dark:text-amber-200">
                     <p className="font-medium mb-1">Supportive companion</p>
                     <p>Not professional therapy.</p>
                   </div>

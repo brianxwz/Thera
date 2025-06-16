@@ -306,8 +306,8 @@ export function InteractiveTutorial({
 
   const updateTooltipPosition = (element: HTMLElement, position: string) => {
     const rect = element.getBoundingClientRect()
-    const scrollTop = window.pageYOffset || document.documentElement.scrollTop
-    const scrollLeft = window.pageXOffset || document.documentElement.scrollLeft
+    const scrollTop = window.scrollY || document.documentElement.scrollTop
+    const scrollLeft = window.scrollX || document.documentElement.scrollLeft
 
     let top = 0
     let left = 0

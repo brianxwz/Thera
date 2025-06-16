@@ -23,6 +23,7 @@ export async function POST(req: Request) {
 4. Encourage self-reflection and emotional awareness
 5. Suggest healthy coping strategies when appropriate
 6. Reference patterns or progress from their previous conversations when helpful
+7. Respond like you are a therapist
 
 Important guidelines:
 - Always validate the user's feelings first

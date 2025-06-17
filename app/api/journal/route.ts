@@ -1,15 +1,10 @@
-import { OpenAI } from 'openai'
-import { NextResponse } from 'next/server'
-
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-})
+import { openai } from "@ai-sdk/openai"
+import { generateText } from "ai"
 
 export async function POST(req: Request) {
-  try {
-    const { conversation, mood } = await req.json()
+  const { conversation, mood } = await req.json()
 
-    const systemPrompt = `You are a wellness journal assistant. Your task is to create a meaningful journal entry based on a conversation between a user and their wellness companion.
+  const systemPrompt = `You are a wellness journal assistant. Your task is to create a meaningful journal entry based on a conversation between a user and their wellness companion.
 
 Guidelines:
 - Extract the key emotional themes and insights from the conversation
@@ -19,31 +14,21 @@ Guidelines:
 - Include any coping strategies or positive insights discussed
 - Make it feel personal and reflective
 
-The journal entry should capture the essence of what the user shared and any growth or insights from the conversation.
+The journal entry should capture the essence of what the user shared and any growth or insights from the conversation.`
 
-${mood ? `Current mood: ${mood}` : ''}`
+  try {
+    const { text } = await generateText({
+      model: openai("gpt-4.1-nano"),
+      system: systemPrompt,
+      prompt: `Create a journal entry based on this conversation. User's mood: ${mood || "Not specified"}
 
-    const response = await openai.chat.completions.create({
-      model: "gpt-4.1-nano",
-      messages: [
-        { role: "system", content: systemPrompt },
-        { 
-          role: "user", 
-          content: `Create a journal entry based on this conversation:\n\n${conversation.map((msg: any) => `${msg.role}: ${msg.content}`).join('\n')}`
-        }
-      ],
-      temperature: 0.7,
-      max_tokens: 500,
+Conversation:
+${conversation.map((msg: any) => `${msg.role === "user" ? "Me" : "Companion"}: ${msg.content}`).join("\n\n")}`,
     })
 
-    return NextResponse.json({ 
-      entry: response.choices[0].message.content 
-    })
+    return Response.json({ entry: text })
   } catch (error) {
-    console.error('Journal API Error:', error)
-    return NextResponse.json(
-      { error: 'Failed to generate journal entry' },
-      { status: 500 }
-    )
+    console.error("Error generating journal entry:", error)
+    return Response.json({ error: "Failed to generate journal entry" }, { status: 500 })
   }
 }

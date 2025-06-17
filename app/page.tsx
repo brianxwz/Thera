@@ -73,7 +73,7 @@ export default function WellnessCompanion() {
 
   const { messages, input, handleInputChange, handleSubmit, isLoading, setMessages } = useChat({
     body: {
-      journalContext: journalEntries.slice(0, 5), // Send last 5 entries for context
+      journalContext: journalEntries.slice(-5), // Send last 5 entries for context
     },
     onFinish: async (message) => {
       // Auto-generate journal entry after meaningful conversations

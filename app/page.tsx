@@ -288,7 +288,7 @@ export default function WellnessCompanion() {
           <h1 className="text-5xl font-bold mb-6">Your Personal Wellness Companion</h1>
           <p className="text-xl text-purple-100 mb-8 leading-relaxed max-w-2xl mx-auto">
             A safe, judgment-free space where AI meets compassion. Get emotional support, track your wellness journey,
-            and build healthier mental habits—all in one place.
+            and build healthier mental habits. All in one place.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button

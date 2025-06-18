@@ -545,7 +545,7 @@ export default function WellnessCompanion() {
             </div>
           )}
 
-          {messages.map((message, index) => (
+          {messages.map((message) => (
             <div
               key={message.id}
               className={`mb-6 flex gap-3 ${message.role === "user" ? "flex-row-reverse" : "flex-row"}`}

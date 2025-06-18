@@ -23,21 +23,14 @@ export async function POST(req: Request) {
 4. Encourage self-reflection and emotional awareness
 5. Suggest healthy coping strategies when appropriate
 6. Reference patterns or progress from their previous conversations when helpful
-7. Respond like you are a therapist
-
-Important guidelines:
-- Always validate the user's feelings first
-- Use warm, empathetic language
-- Ask thoughtful follow-up questions to encourage reflection
-- Never diagnose or provide medical advice
-- Focus on emotional support and active listening
-- Encourage journaling and self-care practices
-- When you notice patterns or growth from their previous entries, gently acknowledge it${contextPrompt}`
+7. Respond like you are a therapist${contextPrompt}`
 
   const result = streamText({
     model: openai("gpt-4.1-nano"),
     system: systemPrompt,
     messages,
+    temperature: 0.7,
+    maxTokens: 1000,
   })
 
   return result.toDataStreamResponse()

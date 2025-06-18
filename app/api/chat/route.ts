@@ -3,13 +3,18 @@ import { streamText } from "ai"
 
 export const maxDuration = 30
 
+interface JournalEntry {
+  date: string
+  content: string
+}
+
 export async function POST(req: Request) {
   const { messages, journalContext } = await req.json()
 
   const contextPrompt =
     journalContext && journalContext.length > 0
       ? `\n\nContext from user's previous journal entries:\n${journalContext
-          .map((entry: any) => `- ${new Date(entry.date).toLocaleDateString()}: ${entry.content.substring(0, 200)}...`)
+          .map((entry: JournalEntry) => `- ${new Date(entry.date).toLocaleDateString()}: ${entry.content.substring(0, 200)}...`)
           .join(
             "\n",
           )}\n\nUse this context to provide more personalized support, but don't explicitly mention that you're referencing their journal unless relevant.`

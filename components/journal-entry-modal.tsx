@@ -18,6 +18,12 @@ interface JournalEntry {
   conversationId?: string
 }
 
+interface MoodOption {
+  emoji: string
+  label: string
+  color: string
+}
+
 interface JournalEntryModalProps {
   isOpen: boolean
   onClose: () => void
@@ -32,7 +38,7 @@ export function JournalEntryModal({ isOpen, onClose, entry, onSave, onDelete }: 
   const [tags, setTags] = useState<string[]>([])
   const [newTag, setNewTag] = useState("")
 
-  const moodOptions = [
+  const moodOptions: MoodOption[] = [
     { emoji: "😊", label: "Great", color: "bg-green-100 text-green-700 hover:bg-green-200" },
     { emoji: "🙂", label: "Good", color: "bg-blue-100 text-blue-700 hover:bg-blue-200" },
     { emoji: "😐", label: "Okay", color: "bg-yellow-100 text-yellow-700 hover:bg-yellow-200" },
@@ -94,7 +100,7 @@ export function JournalEntryModal({ isOpen, onClose, entry, onSave, onDelete }: 
     setTags(tags.filter((tag) => tag !== tagToRemove))
   }
 
-  const handleMoodSelect = (selectedMood: any) => {
+  const handleMoodSelect = (selectedMood: MoodOption) => {
     setMood(`${selectedMood.emoji} ${selectedMood.label}`)
   }
 

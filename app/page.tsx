@@ -1,5 +1,6 @@
 "use client"
 
+import React from "react"
 import { useState, useEffect } from "react"
 import { useChat } from "@ai-sdk/react"
 import { Button } from "@/components/ui/button"
@@ -47,8 +48,20 @@ interface JournalEntry {
 interface NavigationItem {
   id: string
   label: string
-  icon: any
+  icon: React.ComponentType<{ className?: string }>
   badge?: number
+}
+
+interface Message {
+  role: 'user' | 'assistant' | 'system' | 'data'
+  content: string
+  id: string
+}
+
+interface MoodOption {
+  emoji: string
+  label: string
+  color: string
 }
 
 export default function WellnessCompanion() {
@@ -81,7 +94,7 @@ export default function WellnessCompanion() {
         // At least one exchange
         await generateJournalEntry([...messages, message])
       }
-    },
+    }
   })
 
   useEffect(() => {
@@ -127,7 +140,7 @@ export default function WellnessCompanion() {
     }
   }, [isDarkMode])
 
-  const generateJournalEntry = async (conversation: any[]) => {
+  const generateJournalEntry = async (conversation: Message[]) => {
     if (conversation.length < 2) return
 
     setIsGeneratingEntry(true)
@@ -188,7 +201,7 @@ export default function WellnessCompanion() {
     return commonEmotions.filter((emotion) => content.toLowerCase().includes(emotion))
   }
 
-  const moodOptions = [
+  const moodOptions: MoodOption[] = [
     { emoji: "😊", label: "Great", color: "bg-green-100 text-green-700 hover:bg-green-200" },
     { emoji: "🙂", label: "Good", color: "bg-blue-100 text-blue-700 hover:bg-blue-200" },
     { emoji: "😐", label: "Okay", color: "bg-yellow-100 text-yellow-700 hover:bg-yellow-200" },
@@ -204,7 +217,7 @@ export default function WellnessCompanion() {
     { id: "settings", label: "Settings", icon: Settings },
   ]
 
-  const handleMoodSelect = (mood: any) => {
+  const handleMoodSelect = (mood: MoodOption) => {
     setCurrentMood(`${mood.emoji} ${mood.label}`)
   }
 
@@ -570,7 +583,7 @@ export default function WellnessCompanion() {
                       : "bg-white border border-gray-200 text-gray-800 rounded-bl-md dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                   }`}
                 >
-                  <p className="whitespace-pre-wrap leading-relaxed">{message.content}</p>
+                  <div className="whitespace-pre-wrap leading-relaxed">{message.content}</div>
                 </div>
                 <p className="text-xs text-gray-500 mt-2 px-2">
                   {new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}

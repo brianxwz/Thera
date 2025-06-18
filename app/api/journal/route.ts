@@ -1,6 +1,11 @@
 import { openai } from "@ai-sdk/openai"
 import { generateText } from "ai"
 
+interface Message {
+  role: 'user' | 'assistant'
+  content: string
+}
+
 export async function POST(req: Request) {
   const { conversation, mood } = await req.json()
 
@@ -23,7 +28,7 @@ The journal entry should capture the essence of what the user shared and any gro
       prompt: `Create a journal entry based on this conversation. User's mood: ${mood || "Not specified"}
 
 Conversation:
-${conversation.map((msg: any) => `${msg.role === "user" ? "Me" : "Companion"}: ${msg.content}`).join("\n\n")}`,
+${conversation.map((msg: Message) => `${msg.role === "user" ? "Me" : "Companion"}: ${msg.content}`).join("\n\n")}`,
       temperature: 0.7,
       maxTokens: 1000,
     })

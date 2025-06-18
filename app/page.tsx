@@ -30,7 +30,7 @@ import {
   X,
   Plus,
   Home,
-  Play,
+  //Play, // TODO: Uncomment this when we have a tutorial
   Edit3,
   Trash2,
   PenTool,
@@ -711,7 +711,7 @@ export default function WellnessCompanion() {
             </div>
           ) : (
             <div className="space-y-6">
-              {filteredEntries.map((entry, index) => (
+              {filteredEntries.map((entry) => (
                 <Card
                   key={entry.id}
                   className="border-l-4 border-l-purple-400 shadow-lg hover:shadow-xl transition-all duration-200 bg-gradient-to-r from-white to-purple-50 group dark:from-gray-700 dark:to-gray-600 dark:border-gray-600"

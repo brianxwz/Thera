@@ -29,10 +29,9 @@ interface JournalEntryModalProps {
   onClose: () => void
   entry?: JournalEntry | null
   onSave: (entry: JournalEntry) => void
-  onDelete?: (entryId: string) => void
 }
 
-export function JournalEntryModal({ isOpen, onClose, entry, onSave, onDelete }: JournalEntryModalProps) {
+export function JournalEntryModal({ isOpen, onClose, entry, onSave }: JournalEntryModalProps) {
   const [content, setContent] = useState("")
   const [mood, setMood] = useState("")
   const [tags, setTags] = useState<string[]>([])

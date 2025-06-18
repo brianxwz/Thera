@@ -34,7 +34,7 @@ export function InteractiveTutorial({
 }: InteractiveTutorialProps) {
   const [currentStep, setCurrentStep] = useState(0)
   const [isVisible, setIsVisible] = useState(false)
-  const [targetElement, setTargetElement] = useState<HTMLElement | null>(null)
+  const [, setTargetElement] = useState<HTMLElement | null>(null)
   const [tooltipPosition, setTooltipPosition] = useState({ top: 0, left: 0, transform: "" })
   const tooltipRef = useRef<HTMLDivElement>(null)
 

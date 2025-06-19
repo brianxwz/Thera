@@ -16,6 +16,7 @@ import { JournalFilters } from "@/components/journal-filters"
 import { AppHeader } from "@/components/app-header"
 import { AuthModal } from "@/components/auth-modal"
 import { PricingModal } from "@/components/pricing-modal"
+import { JournalEntry, Message, MoodOption, NavigationItem } from "@/lib/types"
 import {
   Heart,
   MessageCircle,
@@ -36,34 +37,6 @@ import {
   PenTool,
 } from "lucide-react"
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog"
-
-interface JournalEntry {
-  id: string
-  date: string
-  content: string
-  mood?: string
-  tags: string[]
-  conversationId?: string
-}
-
-interface NavigationItem {
-  id: string
-  label: string
-  icon: React.ComponentType<{ className?: string }>
-  badge?: number
-}
-
-interface Message {
-  role: 'user' | 'assistant' | 'system' | 'data'
-  content: string
-  id: string
-}
-
-interface MoodOption {
-  emoji: string
-  label: string
-  color: string
-}
 
 export default function WellnessCompanion() {
   const [journalEntries, setJournalEntries] = useState<JournalEntry[]>([])
@@ -92,11 +65,21 @@ export default function WellnessCompanion() {
     },
   })
 
-  useEffect(() => {
-    const saved = localStorage.getItem("wellness-journal")
-    if (saved) {
-      setJournalEntries(JSON.parse(saved))
+  // Fetch journal entries from database
+  const fetchJournalEntries = async () => {
+    try {
+      const response = await fetch('/api/journal-entries')
+      if (response.ok) {
+        const { entries } = await response.json()
+        setJournalEntries(entries)
+      }
+    } catch (error) {
+      console.error('Failed to fetch journal entries:', error)
     }
+  }
+
+  useEffect(() => {
+    fetchJournalEntries()
   }, [])
 
   useEffect(() => {
@@ -135,9 +118,8 @@ export default function WellnessCompanion() {
     }
   }, [isDarkMode])
 
-  const generateJournalEntry = async (conversation: Message[]) => {
+  const generateJournalEntry = async (conversation: Message[], showSuccessDialog = false) => {
     if (conversation.length < 2) return
-
     setIsGeneratingEntry(true)
     try {
       const response = await fetch("/api/journal", {
@@ -151,19 +133,27 @@ export default function WellnessCompanion() {
 
       const { entry } = await response.json()
 
-      const journalEntry: JournalEntry = {
-        id: Date.now().toString(),
-        date: new Date().toISOString(),
-        content: entry,
-        mood: currentMood,
-        tags: extractTags(entry),
-        conversationId: Date.now().toString(),
-      }
+      // Save to database instead of localStorage
+      const saveResponse = await fetch('/api/journal-entries', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          content: entry,
+          mood: currentMood,
+          tags: extractTags(entry),
+          conversationId: Date.now().toString(),
+        }),
+      })
 
-      const updated = [journalEntry, ...journalEntries]
-      setJournalEntries(updated)
-      localStorage.setItem("wellness-journal", JSON.stringify(updated))
-      setLastSavedMessageCount(messages.length)
+      if (saveResponse.ok) {
+        const { entry: savedEntry } = await saveResponse.json()
+        setJournalEntries(prev => [savedEntry, ...prev])
+        setLastSavedMessageCount(messages.length)
+        
+        if (showSuccessDialog) {
+          setShowSaveSuccessDialog(true)
+        }
+      }
     } catch (error) {
       console.error("Failed to generate journal entry:", error)
     } finally {
@@ -249,36 +239,65 @@ export default function WellnessCompanion() {
     setShowSaveSuccessDialog(false)
   }
 
-  const handleSaveChat = async () => {
-    await generateJournalEntry(messages)
-    setShowSaveSuccessDialog(true)
-  }
-
   const handleTutorialComplete = () => {
     setShowTutorial(false)
     localStorage.setItem("wellness-onboarding-completed", "true")
   }
 
-  const handleSaveJournalEntry = (entry: JournalEntry) => {
-    let updated: JournalEntry[]
+  const handleSaveJournalEntry = async (entry: JournalEntry) => {
+    try {
+      if (editingEntry) {
+        // Update existing entry
+        const response = await fetch(`/api/journal-entries/${entry.id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            content: entry.content,
+            mood: entry.mood,
+            tags: entry.tags,
+          }),
+        })
 
-    if (editingEntry) {
-      // Update existing entry
-      updated = journalEntries.map((e) => (e.id === entry.id ? entry : e))
-    } else {
-      // Add new entry
-      updated = [entry, ...journalEntries]
+        if (response.ok) {
+          const { entry: updatedEntry } = await response.json()
+          setJournalEntries(prev => prev.map(e => e.id === entry.id ? updatedEntry : e))
+        }
+      } else {
+        // Create new entry
+        const response = await fetch('/api/journal-entries', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            content: entry.content,
+            mood: entry.mood,
+            tags: entry.tags,
+          }),
+        })
+
+        if (response.ok) {
+          const { entry: newEntry } = await response.json()
+          setJournalEntries(prev => [newEntry, ...prev])
+        }
+      }
+      
+      setEditingEntry(null)
+    } catch (error) {
+      console.error('Failed to save journal entry:', error)
     }
-
-    setJournalEntries(updated)
-    localStorage.setItem("wellness-journal", JSON.stringify(updated))
-    setEditingEntry(null)
   }
 
-  const handleDeleteJournalEntry = (entryId: string) => {
-    const updated = journalEntries.filter((entry) => entry.id !== entryId)
-    setJournalEntries(updated)
-    localStorage.setItem("wellness-journal", JSON.stringify(updated))
+  const handleDeleteJournalEntry = async (entryId: string) => {
+    try {
+      const response = await fetch(`/api/journal-entries/${entryId}`, {
+        method: 'DELETE',
+      })
+
+      if (response.ok) {
+        setJournalEntries(prev => prev.filter(entry => entry.id !== entryId))
+      }
+    } catch (error) {
+      console.error('Failed to delete journal entry:', error)
+    }
   }
 
   const handleEditEntry = (entry: JournalEntry) => {
@@ -545,7 +564,7 @@ export default function WellnessCompanion() {
               New Chat
             </Button>
             <Button
-              onClick={handleSaveChat}
+              onClick={() => generateJournalEntry(messages, true)}
               variant="secondary"
               size="sm"
               className="bg-white/20 border-white/30 text-white hover:bg-white/30"
@@ -756,7 +775,7 @@ export default function WellnessCompanion() {
                       <div className="flex items-center gap-3">
                         <div className="w-3 h-3 bg-purple-400 rounded-full"></div>
                         <span className="text-sm font-medium text-gray-600 dark:text-gray-300">
-                          {new Date(entry.date).toLocaleDateString("en-US", {
+                          {new Date(entry.created_at).toLocaleDateString("en-US", {
                             weekday: "long",
                             year: "numeric",
                             month: "long",
@@ -765,7 +784,7 @@ export default function WellnessCompanion() {
                             minute: "2-digit",
                           })}
                         </span>
-                        {entry.conversationId && (
+                        {entry.conversation_id && (
                           <Badge variant="outline" className="text-xs bg-blue-50 text-blue-600 border-blue-200">
                             Auto-generated
                           </Badge>
@@ -855,15 +874,22 @@ export default function WellnessCompanion() {
           <Card className="p-6 dark:bg-gray-700 dark:border-gray-600">
             <h3 className="text-lg font-semibold text-gray-800 mb-4 dark:text-white">Data & Privacy</h3>
             <p className="text-gray-600 mb-4 dark:text-gray-300">
-              Your conversations and journal entries are stored locally on your device for privacy.
+              Your conversations and journal entries are stored securely in the database and synced across devices.
             </p>
             <Button
               variant="outline"
-              onClick={() => {
+              onClick={async () => {
                 if (confirm("Are you sure you want to clear all your data? This cannot be undone.")) {
-                  localStorage.removeItem("wellness-journal")
-                  setJournalEntries([])
-                  setMessages([])
+                  try {
+                    // Delete all entries from database
+                    for (const entry of journalEntries) {
+                      await fetch(`/api/journal-entries/${entry.id}`, { method: 'DELETE' })
+                    }
+                    setJournalEntries([])
+                    setMessages([])
+                  } catch (error) {
+                    console.error('Failed to clear data:', error)
+                  }
                 }
               }}
             >

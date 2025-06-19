@@ -8,15 +8,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { Badge } from "@/components/ui/badge"
 import { Label } from "@/components/ui/label"
 import { Heart, Save, X, Plus } from "lucide-react"
-
-interface JournalEntry {
-  id: string
-  date: string
-  content: string
-  mood?: string
-  tags: string[]
-  conversationId?: string
-}
+import { JournalEntry } from "@/lib/types"
 
 interface MoodOption {
   emoji: string
@@ -67,16 +59,18 @@ export function JournalEntryModal({ isOpen, onClose, entry, onSave }: JournalEnt
   const handleSave = () => {
     if (!content.trim()) return
 
-    const journalEntry: JournalEntry = {
-      id: entry?.id || Date.now().toString(),
-      date: entry?.date || new Date().toISOString(), // Use existing date or current time
-      content: content.trim(),
-      mood,
-      tags,
-      conversationId: entry?.conversationId,
+    const newEntry: JournalEntry = {
+      id: "",
+      user_id: "",
+      content: content,
+      mood: mood,
+      tags: tags,
+      conversation_id: undefined,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
     }
 
-    onSave(journalEntry)
+    onSave(newEntry)
     handleClose()
   }
 

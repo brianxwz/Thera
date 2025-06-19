@@ -7,15 +7,7 @@ import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from "@/components/ui/card"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Search, Filter, SortAsc, Calendar, Tag, Heart, X, ChevronDown, ChevronUp } from "lucide-react"
-
-interface JournalEntry {
-  id: string
-  date: string
-  content: string
-  mood?: string
-  tags: string[]
-  conversationId?: string
-}
+import { JournalEntry } from "@/lib/types"
 
 interface JournalFiltersProps {
   entries: JournalEntry[]
@@ -102,7 +94,7 @@ export function JournalFilters({ entries, onFilteredEntriesChange }: JournalFilt
       }
 
       if (dateRange !== "all") {
-        filtered = filtered.filter((entry) => new Date(entry.date) >= filterDate)
+        filtered = filtered.filter((entry) => new Date(entry.created_at) >= filterDate)
       }
     }
 
@@ -110,9 +102,9 @@ export function JournalFilters({ entries, onFilteredEntriesChange }: JournalFilt
     filtered.sort((a, b) => {
       switch (sortBy) {
         case "newest":
-          return new Date(b.date).getTime() - new Date(a.date).getTime()
+          return new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
         case "oldest":
-          return new Date(a.date).getTime() - new Date(b.date).getTime()
+          return new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
         case "longest":
           return b.content.length - a.content.length
         case "shortest":

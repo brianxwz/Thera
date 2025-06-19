@@ -59,7 +59,7 @@ export function AppHeader({
               </div>
               <div>
                 <h1 className="text-xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
-                  Wellness Companion
+                  Liora Journal
                 </h1>
                 <p className="text-xs text-gray-500 hidden sm:block dark:text-gray-400">
                   Your personal mental health support

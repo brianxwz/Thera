@@ -68,7 +68,7 @@ export default function WellnessCompanion() {
   const [journalEntries, setJournalEntries] = useState<JournalEntry[]>([])
   const [filteredEntries, setFilteredEntries] = useState<JournalEntry[]>([])
   const [currentMood, setCurrentMood] = useState("")
-  const [activeSection, setActiveSection] = useState("chat")
+  const [activeSection, setActiveSection] = useState("home")
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [sidebarHovered, setSidebarHovered] = useState(false)
   const [isGeneratingEntry, setIsGeneratingEntry] = useState(false)
@@ -878,7 +878,7 @@ export default function WellnessCompanion() {
               {(sidebarHovered || sidebarOpen) && (
                 <div className="overflow-hidden">
                   <h1 className="text-sm font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent whitespace-nowrap">
-                    Wellness Companion
+                    Liora Journal
                   </h1>
                 </div>
               )}

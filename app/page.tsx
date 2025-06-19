@@ -35,6 +35,7 @@ import {
   Trash2,
   PenTool,
 } from "lucide-react"
+import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog"
 
 interface JournalEntry {
   id: string
@@ -79,20 +80,15 @@ export default function WellnessCompanion() {
   const [entryToDelete, setEntryToDelete] = useState<string | null>(null)
   const [showAuthModal, setShowAuthModal] = useState(false)
   const [showPricingModal, setShowPricingModal] = useState(false)
+  const [showNewChatDialog, setShowNewChatDialog] = useState(false)
   const [isPremium, setIsPremium] = useState(false)
   const [isDarkMode, setIsDarkMode] = useState(true) // Default to dark mode
+  const [lastSavedMessageCount, setLastSavedMessageCount] = useState(0)
 
   const { messages, input, handleInputChange, handleSubmit, isLoading, setMessages } = useChat({
     body: {
       journalContext: journalEntries.slice(-5), // Send last 5 entries for context
     },
-    onFinish: async (message) => {
-      // Auto-generate journal entry after meaningful conversations
-      if (messages.length >= 2) {
-        // At least one exchange
-        await generateJournalEntry([...messages, message])
-      }
-    }
   })
 
   useEffect(() => {
@@ -166,6 +162,7 @@ export default function WellnessCompanion() {
       const updated = [journalEntry, ...journalEntries]
       setJournalEntries(updated)
       localStorage.setItem("wellness-journal", JSON.stringify(updated))
+      setLastSavedMessageCount(messages.length)
     } catch (error) {
       console.error("Failed to generate journal entry:", error)
     } finally {
@@ -220,8 +217,26 @@ export default function WellnessCompanion() {
   }
 
   const startNewConversation = () => {
+    // Check if there are unsaved messages
+    if (messages.length > lastSavedMessageCount) {
+      setShowNewChatDialog(true)
+      return
+    }
+    
+    // If no unsaved messages, start new chat
     setMessages([])
     setCurrentMood("")
+    setLastSavedMessageCount(0)
+  }
+
+  const handleNewChatConfirm = async (shouldSave: boolean) => {
+    if (shouldSave) {
+      await generateJournalEntry(messages)
+    }
+    setMessages([])
+    setCurrentMood("")
+    setLastSavedMessageCount(0)
+    setShowNewChatDialog(false)
   }
 
   const handleTutorialComplete = () => {
@@ -503,15 +518,28 @@ export default function WellnessCompanion() {
             <Heart className="h-6 w-6" />
             <h2 className="text-xl font-bold">Chat Support</h2>
           </div>
-          <Button
-            onClick={startNewConversation}
-            variant="outline"
-            size="sm"
-            className="bg-white/20 border-white/30 text-white hover:bg-white/30"
-          >
-            <Plus className="h-4 w-4 mr-2" />
-            New Chat
-          </Button>
+          <div className="flex gap-2">
+            <Button
+              onClick={startNewConversation}
+              variant="outline"
+              size="sm"
+              className="bg-white/20 border-white/30 text-white hover:bg-white/30"
+              disabled={messages.length === 0}
+            >
+              <Plus className="h-4 w-4 mr-2" />
+              New Chat
+            </Button>
+            <Button
+              onClick={() => generateJournalEntry(messages)}
+              variant="secondary"
+              size="sm"
+              className="bg-white/20 border-white/30 text-white hover:bg-white/30"
+              disabled={messages.length === 0 || isGeneratingEntry || messages.length === lastSavedMessageCount}
+            >
+              <BookOpen className="h-4 w-4 mr-2" />
+              Save as Journal Entry
+            </Button>
+          </div>
         </div>
         <p className="text-purple-100 mb-4">How are you feeling right now?</p>
 
@@ -992,6 +1020,31 @@ export default function WellnessCompanion() {
       <AuthModal isOpen={showAuthModal} onClose={() => setShowAuthModal(false)} />
 
       <PricingModal isOpen={showPricingModal} onClose={() => setShowPricingModal(false)} onUpgrade={handleUpgrade} />
+
+      {/* New Chat Confirmation Dialog */}
+      <Dialog open={showNewChatDialog} onOpenChange={setShowNewChatDialog}>
+        <DialogContent className="sm:max-w-md">
+          <div className="flex items-center gap-4">
+            <div className="p-3 rounded-full bg-blue-100">
+              <MessageCircle className="h-6 w-6 text-blue-700" />
+            </div>
+            <div>
+              <DialogTitle>Save Current Chat?</DialogTitle>
+              <DialogDescription>
+                Would you like to save the current conversation as a journal entry before starting a new chat?
+              </DialogDescription>
+            </div>
+          </div>
+          <div className="flex justify-end gap-3 mt-6">
+            <Button variant="outline" onClick={() => handleNewChatConfirm(false)}>
+              Don't Save
+            </Button>
+            <Button onClick={() => handleNewChatConfirm(true)} disabled={messages.length === 0 || isGeneratingEntry || messages.length === lastSavedMessageCount}>
+              Save as Journal Entry
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

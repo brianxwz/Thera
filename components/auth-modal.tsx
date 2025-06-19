@@ -131,7 +131,7 @@ export function AuthModal({ isOpen, onClose, onAuthenticated }: AuthModalProps) 
       const { error } = await supabase.auth.signInWithOAuth({
         provider,
         options: {
-          redirectTo: process.env.NEXT_PUBLIC_AUTH_REDIRECT_URL,
+          redirectTo: `${window.location.origin}/auth/callback`,
         },
       })
 

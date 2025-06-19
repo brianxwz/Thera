@@ -25,7 +25,7 @@ export function AuthModal({ isOpen, onClose, onAuthenticated }: AuthModalProps) 
   const [name, setName] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState("")
-  const [isSignUp, setIsSignUp] = useState(false)
+  const [, setIsSignUp] = useState(false)
 
   // Password validation
   const passwordRequirements = {
@@ -70,7 +70,7 @@ export function AuthModal({ isOpen, onClose, onAuthenticated }: AuthModalProps) 
         onAuthenticated(data.user.email!, isPremium)
         onClose()
       }
-    } catch (err) {
+    } catch {
       setError("An unexpected error occurred. Please try again.")
     } finally {
       setIsLoading(false)
@@ -116,7 +116,7 @@ export function AuthModal({ isOpen, onClose, onAuthenticated }: AuthModalProps) 
         onAuthenticated(data.user.email!, false)
         onClose()
       }
-    } catch (err) {
+    } catch {
       setError("An unexpected error occurred. Please try again.")
     } finally {
       setIsLoading(false)
@@ -128,7 +128,7 @@ export function AuthModal({ isOpen, onClose, onAuthenticated }: AuthModalProps) 
     setError("")
 
     try {
-      const { data, error } = await supabase.auth.signInWithOAuth({
+      const { error } = await supabase.auth.signInWithOAuth({
         provider,
         options: {
           redirectTo: `${window.location.origin}/auth/callback`,
@@ -143,7 +143,7 @@ export function AuthModal({ isOpen, onClose, onAuthenticated }: AuthModalProps) 
 
       // OAuth will redirect to the callback URL
       // The callback will handle the authentication
-    } catch (err) {
+    } catch {
       setError("An unexpected error occurred. Please try again.")
       setIsLoading(false)
     }

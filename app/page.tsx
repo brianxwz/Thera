@@ -16,7 +16,6 @@ import { JournalFilters } from "@/components/journal-filters"
 import { AppHeader } from "@/components/app-header"
 import { AuthModal } from "@/components/auth-modal"
 import { PricingModal } from "@/components/pricing-modal"
-import { useAuth } from "@/components/supabase-auth-provider"
 import {
   Heart,
   MessageCircle,
@@ -82,8 +81,6 @@ export default function WellnessCompanion() {
   const [showPricingModal, setShowPricingModal] = useState(false)
   const [isPremium, setIsPremium] = useState(false)
   const [isDarkMode, setIsDarkMode] = useState(true) // Default to dark mode
-
-  const { user, isAuthenticated } = useAuth()
 
   const { messages, input, handleInputChange, handleSubmit, isLoading, setMessages } = useChat({
     body: {

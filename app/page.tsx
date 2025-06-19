@@ -81,6 +81,7 @@ export default function WellnessCompanion() {
   const [showAuthModal, setShowAuthModal] = useState(false)
   const [showPricingModal, setShowPricingModal] = useState(false)
   const [showNewChatDialog, setShowNewChatDialog] = useState(false)
+  const [showSaveSuccessDialog, setShowSaveSuccessDialog] = useState(false)
   const [isPremium, setIsPremium] = useState(false)
   const [isDarkMode, setIsDarkMode] = useState(true) // Default to dark mode
   const [lastSavedMessageCount, setLastSavedMessageCount] = useState(0)
@@ -237,6 +238,20 @@ export default function WellnessCompanion() {
     setCurrentMood("")
     setLastSavedMessageCount(0)
     setShowNewChatDialog(false)
+  }
+
+  const handleSaveSuccessConfirm = (startNewChat: boolean) => {
+    if (startNewChat) {
+      setMessages([])
+      setCurrentMood("")
+      setLastSavedMessageCount(0)
+    }
+    setShowSaveSuccessDialog(false)
+  }
+
+  const handleSaveChat = async () => {
+    await generateJournalEntry(messages)
+    setShowSaveSuccessDialog(true)
   }
 
   const handleTutorialComplete = () => {
@@ -530,7 +545,7 @@ export default function WellnessCompanion() {
               New Chat
             </Button>
             <Button
-              onClick={() => generateJournalEntry(messages)}
+              onClick={handleSaveChat}
               variant="secondary"
               size="sm"
               className="bg-white/20 border-white/30 text-white hover:bg-white/30"
@@ -1030,7 +1045,7 @@ export default function WellnessCompanion() {
             </div>
             <div>
               <DialogTitle>Save Current Chat?</DialogTitle>
-              <DialogDescription>
+              <DialogDescription className="mt-2">
                 Would you like to save the current conversation as a journal entry before starting a new chat?
               </DialogDescription>
             </div>
@@ -1041,6 +1056,31 @@ export default function WellnessCompanion() {
             </Button>
             <Button onClick={() => handleNewChatConfirm(true)} disabled={messages.length === 0 || isGeneratingEntry || messages.length === lastSavedMessageCount}>
               Save as Journal Entry
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Save Success Dialog */}
+      <Dialog open={showSaveSuccessDialog} onOpenChange={setShowSaveSuccessDialog}>
+        <DialogContent className="sm:max-w-md">
+          <div className="flex items-center gap-4">
+            <div className="p-3 rounded-full bg-green-100">
+              <BookOpen className="h-6 w-6 text-green-700" />
+            </div>
+            <div>
+              <DialogTitle>Journal Entry Saved!</DialogTitle>
+              <DialogDescription className="mt-2">
+                Your conversation has been saved as a journal entry. Would you like to continue chatting or start a new conversation?
+              </DialogDescription>
+            </div>
+          </div>
+          <div className="flex justify-end gap-3 mt-6">
+            <Button variant="outline" onClick={() => handleSaveSuccessConfirm(false)}>
+              Continue Chatting
+            </Button>
+            <Button onClick={() => handleSaveSuccessConfirm(true)}>
+              Start New Chat
             </Button>
           </div>
         </DialogContent>

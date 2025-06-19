@@ -11,14 +11,15 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Heart, Mail, Lock, User, Check, Crown, AlertCircle } from "lucide-react"
 import { supabase } from "@/lib/supabase"
+import { useAuth } from "@/components/supabase-auth-provider"
 
 interface AuthModalProps {
   isOpen: boolean
   onClose: () => void
-  onAuthenticated: (email: string, isPremium?: boolean) => void
 }
 
-export function AuthModal({ isOpen, onClose, onAuthenticated }: AuthModalProps) {
+export function AuthModal({ isOpen, onClose }: AuthModalProps) {
+  const { user, isAuthenticated } = useAuth()
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [confirmPassword, setConfirmPassword] = useState("")
@@ -65,9 +66,6 @@ export function AuthModal({ isOpen, onClose, onAuthenticated }: AuthModalProps) 
       }
 
       if (data.user) {
-        // Check if user has premium subscription (you can implement this logic)
-        const isPremium = email.includes("premium") // Mock premium check
-        onAuthenticated(data.user.email!, isPremium)
         onClose()
       }
     } catch {
@@ -111,9 +109,6 @@ export function AuthModal({ isOpen, onClose, onAuthenticated }: AuthModalProps) 
       }
 
       if (data.user) {
-        // For sign up, we might want to show a confirmation message
-        // For now, we'll sign them in directly
-        onAuthenticated(data.user.email!, false)
         onClose()
       }
     } catch {
@@ -164,6 +159,12 @@ export function AuthModal({ isOpen, onClose, onAuthenticated }: AuthModalProps) 
     "Backup & sync across devices",
     "Advanced search & filtering",
   ]
+
+  // Optionally, auto-close modal if already authenticated
+  if (isAuthenticated && isOpen) {
+    onClose()
+    return null
+  }
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>

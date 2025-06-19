@@ -16,6 +16,7 @@ import { JournalFilters } from "@/components/journal-filters"
 import { AppHeader } from "@/components/app-header"
 import { AuthModal } from "@/components/auth-modal"
 import { PricingModal } from "@/components/pricing-modal"
+import { useAuth } from "@/components/supabase-auth-provider"
 import {
   Heart,
   MessageCircle,
@@ -79,10 +80,10 @@ export default function WellnessCompanion() {
   const [entryToDelete, setEntryToDelete] = useState<string | null>(null)
   const [showAuthModal, setShowAuthModal] = useState(false)
   const [showPricingModal, setShowPricingModal] = useState(false)
-  const [isAuthenticated, setIsAuthenticated] = useState(false)
-  const [userEmail, setUserEmail] = useState("")
   const [isPremium, setIsPremium] = useState(false)
   const [isDarkMode, setIsDarkMode] = useState(true) // Default to dark mode
+
+  const { user, isAuthenticated } = useAuth()
 
   const { messages, input, handleInputChange, handleSubmit, isLoading, setMessages } = useChat({
     body: {
@@ -273,18 +274,6 @@ export default function WellnessCompanion() {
       handleDeleteJournalEntry(entryToDelete)
       setEntryToDelete(null)
     }
-  }
-
-  const handleAuthenticated = (email: string, premium = false) => {
-    setIsAuthenticated(true)
-    setUserEmail(email)
-    setIsPremium(premium)
-  }
-
-  const handleLogout = () => {
-    setIsAuthenticated(false)
-    setUserEmail("")
-    setIsPremium(false)
   }
 
   const handleUpgrade = () => {
@@ -966,9 +955,6 @@ export default function WellnessCompanion() {
           onLoginClick={() => setShowAuthModal(true)}
           onPricingClick={() => setShowPricingModal(true)}
           onMenuClick={() => setSidebarOpen(true)}
-          handleLogout={handleLogout}
-          isAuthenticated={isAuthenticated}
-          userEmail={userEmail}
           isPremium={isPremium}
           isDarkMode={isDarkMode}
           onToggleDarkMode={() => setIsDarkMode(!isDarkMode)}
@@ -1006,7 +992,7 @@ export default function WellnessCompanion() {
         itemName="this journal entry"
       />
 
-      <AuthModal isOpen={showAuthModal} onClose={() => setShowAuthModal(false)} onAuthenticated={handleAuthenticated} />
+      <AuthModal isOpen={showAuthModal} onClose={() => setShowAuthModal(false)} />
 
       <PricingModal isOpen={showPricingModal} onClose={() => setShowPricingModal(false)} onUpgrade={handleUpgrade} />
     </div>

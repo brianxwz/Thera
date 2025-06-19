@@ -11,14 +11,12 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Heart, Sparkles, User, Settings, LogOut, Crown, Menu, Moon, Sun } from "lucide-react"
 import { supabase } from "@/lib/supabase"
+import { useAuth } from "@/components/supabase-auth-provider"
 
 interface AppHeaderProps {
   onLoginClick: () => void
   onPricingClick: () => void
   onMenuClick: () => void
-  handleLogout: () => void
-  isAuthenticated?: boolean
-  userEmail?: string
   isPremium?: boolean
   isDarkMode?: boolean
   onToggleDarkMode?: () => void
@@ -28,23 +26,19 @@ export function AppHeader({
   onLoginClick,
   onPricingClick,
   onMenuClick,
-  isAuthenticated = false,
-  userEmail = "",
   isPremium = false,
   isDarkMode = true,
   onToggleDarkMode,
-  handleLogout,
 }: AppHeaderProps) {
+  const { user, isAuthenticated, isLoading } = useAuth()
+
   const onLogout = async () => {
     try {
       const { error } = await supabase.auth.signOut()
-      
       if (error) {
         console.error("Error signing out:", error.message)
         return
       }
-
-      handleLogout()
     } catch (err) {
       console.error("Unexpected error during logout:", err)
     }
@@ -62,7 +56,6 @@ export function AppHeader({
             <Button variant="ghost" size="sm" className="lg:hidden" onClick={onMenuClick}>
               <Menu className="h-5 w-5" />
             </Button>
-
             <div className="flex items-center gap-3">
               <div className="relative">
                 <div className="w-10 h-10 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl flex items-center justify-center">
@@ -80,10 +73,9 @@ export function AppHeader({
               </div>
             </div>
           </div>
-
           {/* Navigation and Actions */}
           <div className="flex items-center gap-4">
-            {!isAuthenticated ? (
+            {isLoading ? null : !isAuthenticated ? (
               <>
                 <Button
                   variant="ghost"
@@ -122,7 +114,6 @@ export function AppHeader({
                     Premium
                   </Badge>
                 )}
-
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button variant="ghost" className="relative h-10 w-10 rounded-full">
@@ -135,7 +126,7 @@ export function AppHeader({
                   </DropdownMenuTrigger>
                   <DropdownMenuContent className="w-56" align="end" forceMount>
                     <div className="flex flex-col space-y-1 p-2">
-                      <p className="text-sm font-medium leading-none">{userEmail}</p>
+                      <p className="text-sm font-medium leading-none">{user?.email}</p>
                       <p className="text-xs leading-none text-muted-foreground">
                         {isPremium ? "Premium Member" : "Free Account"}
                       </p>

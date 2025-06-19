@@ -281,6 +281,12 @@ export default function WellnessCompanion() {
     setIsPremium(premium)
   }
 
+  const handleLogout = () => {
+    setIsAuthenticated(false)
+    setUserEmail("")
+    setIsPremium(false)
+  }
+
   const handleUpgrade = () => {
     setIsPremium(true)
     setShowPricingModal(false)
@@ -411,7 +417,7 @@ export default function WellnessCompanion() {
           <div className="grid md:grid-cols-2 gap-12 items-center mb-16">
             <div>
               <h3 className="text-3xl font-bold text-gray-800 mb-6 dark:text-white">
-                Why choose our wellness companion?
+                Why choose Liora Journal?
               </h3>
               <div className="space-y-4">
                 <div className="flex items-start gap-4">
@@ -430,7 +436,7 @@ export default function WellnessCompanion() {
                   <div>
                     <h4 className="font-semibold text-gray-800 mb-1 dark:text-white">Completely Private</h4>
                     <p className="text-gray-600 dark:text-gray-300">
-                      Your conversations stay on your device. No data sharing.
+                      Conversations are safely encrypted and synced across devices.
                     </p>
                   </div>
                 </div>
@@ -960,6 +966,7 @@ export default function WellnessCompanion() {
           onLoginClick={() => setShowAuthModal(true)}
           onPricingClick={() => setShowPricingModal(true)}
           onMenuClick={() => setSidebarOpen(true)}
+          handleLogout={handleLogout}
           isAuthenticated={isAuthenticated}
           userEmail={userEmail}
           isPremium={isPremium}

@@ -49,7 +49,7 @@ export function DeleteConfirmationDialog({
             <div>
               <h4 className="font-medium text-red-800 mb-1">This action cannot be undone</h4>
               <p className="text-sm text-red-700">
-                Once deleted, this journal entry will be permanently removed from your wellness companion.
+                Once deleted, this entry will be permanently removed from your journal.
               </p>
             </div>
           </div>

@@ -10,11 +10,13 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Heart, Sparkles, User, Settings, LogOut, Crown, Menu, Moon, Sun } from "lucide-react"
+import { supabase } from "@/lib/supabase"
 
 interface AppHeaderProps {
   onLoginClick: () => void
   onPricingClick: () => void
   onMenuClick: () => void
+  handleLogout: () => void
   isAuthenticated?: boolean
   userEmail?: string
   isPremium?: boolean
@@ -31,10 +33,21 @@ export function AppHeader({
   isPremium = false,
   isDarkMode = true,
   onToggleDarkMode,
+  handleLogout,
 }: AppHeaderProps) {
-  const handleLogout = () => {
-    // Handle logout logic here
-    console.log("Logging out...")
+  const onLogout = async () => {
+    try {
+      const { error } = await supabase.auth.signOut()
+      
+      if (error) {
+        console.error("Error signing out:", error.message)
+        return
+      }
+
+      handleLogout()
+    } catch (err) {
+      console.error("Unexpected error during logout:", err)
+    }
   }
 
   return (
@@ -141,9 +154,9 @@ export function AppHeader({
                       <Settings className="mr-2 h-4 w-4" />
                       <span>Settings</span>
                     </DropdownMenuItem>
-                    <DropdownMenuItem onClick={handleLogout}>
+                    <DropdownMenuItem onClick={onLogout}>
                       <LogOut className="mr-2 h-4 w-4" />
-                      <span>Log out</span>
+                      <span>Log Out</span>
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>

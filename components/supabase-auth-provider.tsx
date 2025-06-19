@@ -7,7 +7,7 @@ import { supabase } from "@/lib/supabase"
 export type User = {
   id: string
   email?: string
-  [key: string]: any // eslint-disable-line no-explicit-any
+  [key: string]: any // eslint-disable-line @typescript-eslint/no-explicit-any
 } | null
 
 interface AuthContextType {

@@ -15,7 +15,7 @@ import { DeleteConfirmationDialog } from "@/components/delete-confirmation-dialo
 import { JournalFilters } from "@/components/journal-filters"
 import { AppHeader } from "@/components/app-header"
 import { AuthModal } from "@/components/auth-modal"
-import { PricingModal } from "@/components/pricing-modal"
+import { PricingModal } from "@/components/pricing-modal" // eslint-disable-line @typescript-eslint/no-unused-vars
 import { JournalEntry, Message, MoodOption, NavigationItem } from "@/lib/types"
 import {
   Heart,
@@ -54,7 +54,7 @@ export default function WellnessCompanion() {
   const [showDeleteDialog, setShowDeleteDialog] = useState(false)
   const [entryToDelete, setEntryToDelete] = useState<string | null>(null)
   const [showAuthModal, setShowAuthModal] = useState(false)
-  const [showPricingModal, setShowPricingModal] = useState(false)
+  const [showPricingModal, setShowPricingModal] = useState(false) // eslint-disable-line @typescript-eslint/no-unused-vars
   const [showNewChatDialog, setShowNewChatDialog] = useState(false)
   const [showSaveSuccessDialog, setShowSaveSuccessDialog] = useState(false)
   const [isPremium, setIsPremium] = useState(false)
@@ -295,7 +295,7 @@ export default function WellnessCompanion() {
     }
   }
 
-  const handleUpgrade = () => {
+  const handleUpgrade = () => { // eslint-disable-line @typescript-eslint/no-unused-vars
     setIsPremium(true)
     setShowPricingModal(false)
     // In a real app, this would handle the payment flow

@@ -67,7 +67,7 @@ export default function WellnessCompanion() {
     },
   })
 
-  const { user } = useAuth()
+  const { user, isAuthenticated } = useAuth()
 
   // Fetch journal entries from database
   const fetchJournalEntries = async () => {
@@ -122,6 +122,10 @@ export default function WellnessCompanion() {
   }, [isDarkMode])
 
   const generateJournalEntry = async (conversation: Message[], showSuccessDialog = false) => {
+    if (!isAuthenticated) {
+      setShowAuthModal(true)
+      return
+    }
     if (conversation.length < 2) return
     setIsGeneratingEntry(true)
     try {
@@ -238,6 +242,10 @@ export default function WellnessCompanion() {
   }
 
   const handleSaveJournalEntry = async (entry: JournalEntry) => {
+    if (!isAuthenticated) {
+      setShowAuthModal(true)
+      return
+    }
     try {
       if (editingEntry) {
         // Update existing entry

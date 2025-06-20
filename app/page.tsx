@@ -304,13 +304,13 @@ export default function WellnessCompanion() {
   const renderHomeSection = () => (
     <div className="flex flex-col h-full overflow-y-auto">
       {/* Hero Section */}
-      <div className="bg-gradient-to-br from-purple-600 via-pink-500 to-orange-400 text-white p-12 text-center">
+      <section className="bg-gradient-to-br from-purple-600 via-pink-500 to-orange-400 text-white p-12 text-center">
         <div className="max-w-4xl mx-auto">
           <div className="relative inline-block mb-8">
             <div className="w-24 h-24 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm">
-              <Heart className="h-12 w-12 text-white animate-pulse" />
+              <Heart className="h-12 w-12 text-white animate-pulse" aria-hidden="true" />
             </div>
-            <Sparkles className="h-8 w-8 text-yellow-300 absolute -top-2 -right-2 animate-bounce" />
+            <Sparkles className="h-8 w-8 text-yellow-300 absolute -top-2 -right-2 animate-bounce" aria-hidden="true" />
           </div>
           <h1 className="text-5xl font-bold mb-6">Your Personal Wellness Companion</h1>
           <p className="text-xl text-purple-100 mb-8 leading-relaxed max-w-2xl mx-auto">
@@ -324,7 +324,7 @@ export default function WellnessCompanion() {
               className="tutorial-start-journey bg-white text-purple-600 hover:bg-gray-100 px-8 py-4 text-lg font-semibold shadow-xl hover:shadow-2xl transition-all duration-200 transform hover:scale-105"
             >
               Start Your Journey
-              <Heart className="h-5 w-5 ml-2" />
+              <Heart className="h-5 w-5 ml-2" aria-hidden="true" />
             </Button>
             {/* TODO: Uncomment this when we have a tutorial
             <Button
@@ -338,57 +338,57 @@ export default function WellnessCompanion() {
             </Button> */}
           </div>
         </div>
-      </div>
+      </section>
 
       {/* Features Section */}
-      <div className="bg-white py-16 dark:bg-gray-800">
+      <section className="bg-white py-16 dark:bg-gray-800">
         <div className="max-w-6xl mx-auto px-8">
-          <div className="text-center mb-16">
+          <header className="text-center mb-16">
             <h2 className="text-4xl font-bold text-gray-800 mb-4 dark:text-white">
               Everything you need for mental wellness
             </h2>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto dark:text-gray-300">
               Combining AI technology with evidence-based wellness practices to support your mental health journey.
             </p>
-          </div>
+          </header>
 
           <div className="grid md:grid-cols-3 gap-8 mb-16">
-            <Card className="p-8 text-center hover:shadow-xl transition-all duration-200 border-2 border-transparent hover:border-purple-200 dark:bg-gray-700 dark:hover:border-purple-400">
+            <article className="p-8 text-center hover:shadow-xl transition-all duration-200 border-2 border-transparent hover:border-purple-200 dark:bg-gray-700 dark:hover:border-purple-400">
               <div className="w-16 h-16 mx-auto bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center mb-6">
-                <MessageCircle className="h-8 w-8 text-white" />
+                <MessageCircle className="h-8 w-8 text-white" aria-hidden="true" />
               </div>
               <h3 className="text-2xl font-bold text-gray-800 mb-4 dark:text-white">AI Chat Support</h3>
               <p className="text-gray-600 leading-relaxed dark:text-gray-300">
                 Get 24/7 emotional support from a compassionate AI companion that listens without judgment and helps you
                 process your thoughts and feelings.
               </p>
-            </Card>
+            </article>
 
-            <Card className="p-8 text-center hover:shadow-xl transition-all duration-200 border-2 border-transparent hover:border-purple-200 dark:bg-gray-700 dark:hover:border-purple-400">
+            <article className="p-8 text-center hover:shadow-xl transition-all duration-200 border-2 border-transparent hover:border-purple-200 dark:bg-gray-700 dark:hover:border-purple-400">
               <div className="w-16 h-16 mx-auto bg-gradient-to-r from-green-500 to-blue-500 rounded-full flex items-center justify-center mb-6">
-                <BookOpen className="h-8 w-8 text-white" />
+                <BookOpen className="h-8 w-8 text-white" aria-hidden="true" />
               </div>
               <h3 className="text-2xl font-bold text-gray-800 mb-4 dark:text-white">Smart Journaling</h3>
               <p className="text-gray-600 leading-relaxed dark:text-gray-300">
                 Automatically capture insights from your conversations or write manual entries. Track patterns, moods,
                 and growth over time.
               </p>
-            </Card>
+            </article>
 
-            <Card className="p-8 text-center hover:shadow-xl transition-all duration-200 border-2 border-transparent hover:border-purple-200 dark:bg-gray-700 dark:hover:border-purple-400">
+            <article className="p-8 text-center hover:shadow-xl transition-all duration-200 border-2 border-transparent hover:border-purple-200 dark:bg-gray-700 dark:hover:border-purple-400">
               <div className="w-16 h-16 mx-auto bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center mb-6">
-                <TrendingUp className="h-8 w-8 text-white" />
+                <TrendingUp className="h-8 w-8 text-white" aria-hidden="true" />
               </div>
               <h3 className="text-2xl font-bold text-gray-800 mb-4 dark:text-white">Wellness Insights</h3>
               <p className="text-gray-600 leading-relaxed dark:text-gray-300">
                 Understand your emotional patterns with intelligent analytics. Identify triggers, track progress, and
                 celebrate your growth.
               </p>
-            </Card>
+            </article>
           </div>
 
           {/* How It Works */}
-          <div className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-2xl p-12 mb-16 dark:from-gray-700 dark:to-gray-600">
+          <section className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-2xl p-12 mb-16 dark:from-gray-700 dark:to-gray-600">
             <h3 className="text-3xl font-bold text-center text-gray-800 mb-12 dark:text-white">How it works</h3>
             <div className="grid md:grid-cols-3 gap-8">
               <div className="text-center">
@@ -419,16 +419,16 @@ export default function WellnessCompanion() {
                 </p>
               </div>
             </div>
-          </div>
+          </section>
 
           {/* Benefits */}
-          <div className="grid md:grid-cols-2 gap-12 items-center mb-16">
+          <section className="grid md:grid-cols-2 gap-12 items-center mb-16">
             <div>
               <h3 className="text-3xl font-bold text-gray-800 mb-6 dark:text-white">
                 Why choose Liora Journal?
               </h3>
-              <div className="space-y-4">
-                <div className="flex items-start gap-4">
+              <ul className="space-y-4">
+                <li className="flex items-start gap-4">
                   <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
                     <span className="text-white text-sm">✓</span>
                   </div>
@@ -436,8 +436,8 @@ export default function WellnessCompanion() {
                     <h4 className="font-semibold text-gray-800 mb-1 dark:text-white">Available 24/7</h4>
                     <p className="text-gray-600 dark:text-gray-300">Get support whenever you need it, day or night.</p>
                   </div>
-                </div>
-                <div className="flex items-start gap-4">
+                </li>
+                <li className="flex items-start gap-4">
                   <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
                     <span className="text-white text-sm">✓</span>
                   </div>
@@ -447,8 +447,8 @@ export default function WellnessCompanion() {
                       Conversations are safely encrypted and synced across devices.
                     </p>
                   </div>
-                </div>
-                <div className="flex items-start gap-4">
+                </li>
+                <li className="flex items-start gap-4">
                   <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
                     <span className="text-white text-sm">✓</span>
                   </div>
@@ -458,8 +458,8 @@ export default function WellnessCompanion() {
                       Express yourself freely in a safe, supportive environment.
                     </p>
                   </div>
-                </div>
-                <div className="flex items-start gap-4">
+                </li>
+                <li className="flex items-start gap-4">
                   <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
                     <span className="text-white text-sm">✓</span>
                   </div>
@@ -469,12 +469,12 @@ export default function WellnessCompanion() {
                       Built on proven mental health and wellness practices.
                     </p>
                   </div>
-                </div>
-              </div>
+                </li>
+              </ul>
             </div>
-            <div className="bg-gradient-to-br from-purple-100 to-pink-100 rounded-2xl p-8 text-center dark:from-gray-700 dark:to-gray-600">
+            <aside className="bg-gradient-to-br from-purple-100 to-pink-100 rounded-2xl p-8 text-center dark:from-gray-700 dark:to-gray-600">
               <div className="w-32 h-32 mx-auto bg-gradient-to-r from-purple-400 to-pink-400 rounded-full flex items-center justify-center mb-6">
-                <Heart className="h-16 w-16 text-white animate-pulse" />
+                <Heart className="h-16 w-16 text-white animate-pulse" aria-hidden="true" />
               </div>
               <h4 className="text-2xl font-bold text-gray-800 mb-4 dark:text-white">Start feeling better today</h4>
               <p className="text-gray-600 mb-6 dark:text-gray-300">
@@ -486,16 +486,16 @@ export default function WellnessCompanion() {
               >
                 Begin Your Journey
               </Button>
-            </div>
-          </div>
+            </aside>
+          </section>
         </div>
-      </div>
+      </section>
 
       {/* Important Notice */}
-      <div className="bg-gradient-to-r from-amber-50 to-orange-50 border-t border-amber-200 py-12 dark:from-amber-900/50 dark:to-orange-900/50 dark:border-amber-800">
+      <section className="bg-gradient-to-r from-amber-50 to-orange-50 border-t border-amber-200 py-12 dark:from-amber-900/50 dark:to-orange-900/50 dark:border-amber-800">
         <div className="max-w-4xl mx-auto px-8">
           <div className="flex items-start gap-6">
-            <AlertCircle className="h-8 w-8 text-amber-600 mt-1 flex-shrink-0 dark:text-amber-400" />
+            <AlertCircle className="h-8 w-8 text-amber-600 mt-1 flex-shrink-0 dark:text-amber-400" aria-hidden="true" />
             <div>
               <h4 className="text-xl font-semibold text-amber-800 mb-3 dark:text-amber-200">Important Notice</h4>
               <p className="text-amber-700 leading-relaxed mb-4 dark:text-amber-300">
@@ -512,7 +512,7 @@ export default function WellnessCompanion() {
             </div>
           </div>
         </div>
-      </div>
+      </section>
     </div>
   )
 
@@ -892,22 +892,24 @@ export default function WellnessCompanion() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-violet-50 via-purple-50 to-pink-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
       {/* Fixed Sidebar Navigation */}
-      <div
+      <nav
         className={`tutorial-sidebar fixed left-0 top-0 h-full z-50 transition-all duration-300 ease-in-out ${
           sidebarHovered || sidebarOpen ? "w-64" : "w-16"
         } ${sidebarOpen ? "translate-x-0" : "-translate-x-full"} lg:translate-x-0`}
         onMouseEnter={() => setSidebarHovered(true)}
         onMouseLeave={() => setSidebarHovered(false)}
+        role="navigation"
+        aria-label="Main navigation"
       >
         <div className="h-full bg-white/95 backdrop-blur-sm border-r border-purple-200 shadow-lg dark:bg-gray-800/95 dark:border-gray-700">
           {/* Logo Section */}
-          <div className="p-4 border-b border-purple-200 dark:border-gray-700">
+          <header className="p-4 border-b border-purple-200 dark:border-gray-700">
             <div className="flex items-center gap-3">
               <div className="relative flex-shrink-0">
                 <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg flex items-center justify-center">
-                  <Heart className="h-4 w-4 text-white" />
+                  <Heart className="h-4 w-4 text-white" aria-hidden="true" />
                 </div>
-                <Sparkles className="h-2 w-2 text-yellow-400 absolute -top-1 -right-1 animate-bounce" />
+                <Sparkles className="h-2 w-2 text-yellow-400 absolute -top-1 -right-1 animate-bounce" aria-hidden="true" />
               </div>
               {(sidebarHovered || sidebarOpen) && (
                 <div className="overflow-hidden">
@@ -917,10 +919,10 @@ export default function WellnessCompanion() {
                 </div>
               )}
             </div>
-          </div>
+          </header>
 
           {/* Navigation Items */}
-          <div className="p-3 space-y-1">
+          <nav className="p-3 space-y-1" role="navigation" aria-label="Section navigation">
             {navigationItems.map((item) => (
               <div key={item.id} className="relative">
                 <Button
@@ -934,8 +936,9 @@ export default function WellnessCompanion() {
                     setActiveSection(item.id)
                     setSidebarOpen(false)
                   }}
+                  aria-current={activeSection === item.id ? "page" : undefined}
                 >
-                  <item.icon className="h-5 w-5 flex-shrink-0" />
+                  <item.icon className="h-5 w-5 flex-shrink-0" aria-hidden="true" />
                   {(sidebarHovered || sidebarOpen) && (
                     <span className="ml-3 whitespace-nowrap overflow-hidden">{item.label}</span>
                   )}
@@ -952,7 +955,7 @@ export default function WellnessCompanion() {
                 </Button>
               </div>
             ))}
-          </div>
+          </nav>
 
           {/* Close button for mobile */}
           <div className="lg:hidden absolute top-4 right-4">
@@ -961,31 +964,32 @@ export default function WellnessCompanion() {
               size="sm"
               className="text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700"
               onClick={() => setSidebarOpen(false)}
+              aria-label="Close navigation"
             >
-              <X className="h-4 w-4" />
+              <X className="h-4 w-4" aria-hidden="true" />
             </Button>
           </div>
 
           {/* Bottom disclaimer - only show when expanded */}
           {(sidebarHovered || sidebarOpen) && (
-            <div className="absolute bottom-4 left-2 right-2">
+            <aside className="absolute bottom-4 left-2 right-2">
               <div className="p-3 bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-lg dark:from-amber-900/50 dark:to-orange-900/50 dark:border-amber-800">
                 <div className="flex items-start gap-2">
-                  <AlertCircle className="h-3 w-3 text-amber-600 dark:text-amber-400 mt-0.5 flex-shrink-0" />
+                  <AlertCircle className="h-3 w-3 text-amber-600 dark:text-amber-400 mt-0.5 flex-shrink-0" aria-hidden="true" />
                   <div className="text-xs text-amber-800 dark:text-amber-200">
                     <p className="font-medium mb-1">Supportive companion</p>
                     <p>Not professional therapy.</p>
                   </div>
                 </div>
               </div>
-            </div>
+            </aside>
           )}
         </div>
-      </div>
+      </nav>
 
       {/* Mobile Overlay */}
       {sidebarOpen && (
-        <div className="fixed inset-0 bg-black/50 z-40 lg:hidden" onClick={() => setSidebarOpen(false)} />
+        <div className="fixed inset-0 bg-black/50 z-40 lg:hidden" onClick={() => setSidebarOpen(false)} aria-hidden="true" />
       )}
 
       {/* Header with left margin for sidebar */}
@@ -1001,13 +1005,13 @@ export default function WellnessCompanion() {
       </div>
 
       {/* Main Content with left margin for sidebar */}
-      <div className="lg:ml-16">
+      <main className="lg:ml-16">
         <div className="container mx-auto p-4 max-w-7xl">
           <Card className="min-h-[calc(100vh-8rem)] shadow-2xl border-0 bg-white/90 backdrop-blur-sm overflow-hidden dark:bg-gray-800/90 dark:border-gray-700">
             {renderActiveSection()}
           </Card>
         </div>
-      </div>
+      </main>
 
       {/* Interactive Tutorial */}
       <InteractiveTutorial
@@ -1040,7 +1044,7 @@ export default function WellnessCompanion() {
         <DialogContent className="sm:max-w-md">
           <div className="flex items-center gap-4">
             <div className="p-3 rounded-full bg-blue-100">
-              <MessageCircle className="h-6 w-6 text-blue-700" />
+              <MessageCircle className="h-6 w-6 text-blue-700" aria-hidden="true" />
             </div>
             <div>
               <DialogTitle>Save Current Chat?</DialogTitle>
@@ -1065,7 +1069,7 @@ export default function WellnessCompanion() {
         <DialogContent className="sm:max-w-md">
           <div className="flex items-center gap-4">
             <div className="p-3 rounded-full bg-green-100">
-              <BookOpen className="h-6 w-6 text-green-700" />
+              <BookOpen className="h-6 w-6 text-green-700" aria-hidden="true" />
             </div>
             <div>
               <DialogTitle>Journal Entry Saved!</DialogTitle>

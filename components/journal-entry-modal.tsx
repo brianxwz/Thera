@@ -28,6 +28,7 @@ export function JournalEntryModal({ isOpen, onClose, entry, onSave }: JournalEnt
   const [mood, setMood] = useState("")
   const [tags, setTags] = useState<string[]>([])
   const [newTag, setNewTag] = useState("")
+  const [id, setId] = useState("")
 
   const moodOptions: MoodOption[] = [
     { emoji: "😊", label: "Great", color: "bg-green-100 text-green-700 hover:bg-green-200" },
@@ -48,6 +49,7 @@ export function JournalEntryModal({ isOpen, onClose, entry, onSave }: JournalEnt
       setContent(entry.content)
       setMood(entry.mood || "")
       setTags(entry.tags || [])
+      setId(entry.id)
     } else {
       // Creating new entry
       setContent("")
@@ -60,7 +62,7 @@ export function JournalEntryModal({ isOpen, onClose, entry, onSave }: JournalEnt
     if (!content.trim()) return
 
     const newEntry: JournalEntry = {
-      id: "",
+      id: id,
       user_id: "",
       content: content,
       mood: mood,

@@ -34,14 +34,14 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
     hasUppercase: /[A-Z]/.test(password),
     hasLowercase: /[a-z]/.test(password),
     hasNumber: /\d/.test(password),
-    hasSpecialChar: /[!@#$%^&*(),.?":{}|<>]/.test(password),
+    //hasSpecialChar: /[!@#$%^&*(),.?":{}|<>]/.test(password),
   }
 
   const characterRequirements = [
     passwordRequirements.hasUppercase,
     passwordRequirements.hasLowercase,
     passwordRequirements.hasNumber,
-    passwordRequirements.hasSpecialChar,
+    //passwordRequirements.hasSpecialChar,
   ]
 
   const metCharacterRequirements = characterRequirements.filter(Boolean).length
@@ -358,10 +358,10 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
                       <div className={`w-2 h-2 rounded-full ${passwordRequirements.hasNumber ? 'bg-green-500' : 'bg-gray-300'}`} />
                       One number (0-9)
                     </div>
-                    <div className={`flex items-center gap-2 text-xs ${passwordRequirements.hasSpecialChar ? 'text-green-600' : 'text-gray-500'}`}>
+                    {/*<div className={`flex items-center gap-2 text-xs ${passwordRequirements.hasSpecialChar ? 'text-green-600' : 'text-gray-500'}`}>
                       <div className={`w-2 h-2 rounded-full ${passwordRequirements.hasSpecialChar ? 'bg-green-500' : 'bg-gray-300'}`} />
                       One special character (!@#$%^&*)
-                    </div>
+                    </div>*/}
                   </div>
                 </div>
               </div>

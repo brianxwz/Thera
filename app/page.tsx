@@ -37,6 +37,8 @@ import {
   PenTool,
 } from "lucide-react"
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog"
+import { useAuth } from "@/components/supabase-auth-provider"
+import { createJournalEntry, deleteJournalEntry, getJournalEntries, updateJournalEntry } from "@/lib/journal"
 
 export default function WellnessCompanion() {
   const [journalEntries, setJournalEntries] = useState<JournalEntry[]>([])
@@ -65,12 +67,13 @@ export default function WellnessCompanion() {
     },
   })
 
+  const { user } = useAuth()
+
   // Fetch journal entries from database
   const fetchJournalEntries = async () => {
     try {
-      const response = await fetch('/api/journal-entries')
-      if (response.ok) {
-        const { entries } = await response.json()
+      const entries = await getJournalEntries()
+      if (entries) {
         setJournalEntries(entries)
       }
     } catch (error) {
@@ -126,7 +129,7 @@ export default function WellnessCompanion() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          conversation: conversation.slice(-6), // Last 3 exchanges
+          conversation: conversation,
           mood: currentMood,
         }),
       })
@@ -134,19 +137,9 @@ export default function WellnessCompanion() {
       const { entry } = await response.json()
 
       // Save to database instead of localStorage
-      const saveResponse = await fetch('/api/journal-entries', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          content: entry,
-          mood: currentMood,
-          tags: extractTags(entry),
-          conversationId: Date.now().toString(),
-        }),
-      })
+      const savedEntry = await createJournalEntry(user?.id || "", entry, currentMood, extractTags(entry), Date.now().toString())
 
-      if (saveResponse.ok) {
-        const { entry: savedEntry } = await saveResponse.json()
+      if (savedEntry) {
         setJournalEntries(prev => [savedEntry, ...prev])
         setLastSavedMessageCount(messages.length)
         
@@ -248,34 +241,16 @@ export default function WellnessCompanion() {
     try {
       if (editingEntry) {
         // Update existing entry
-        const response = await fetch(`/api/journal-entries/${entry.id}`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            content: entry.content,
-            mood: entry.mood,
-            tags: entry.tags,
-          }),
-        })
+        const updatedEntry = await updateJournalEntry(entry.id, entry.content, entry.mood || "", entry.tags)
 
-        if (response.ok) {
-          const { entry: updatedEntry } = await response.json()
+        if (updatedEntry) {
           setJournalEntries(prev => prev.map(e => e.id === entry.id ? updatedEntry : e))
         }
       } else {
         // Create new entry
-        const response = await fetch('/api/journal-entries', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            content: entry.content,
-            mood: entry.mood,
-            tags: entry.tags,
-          }),
-        })
+        const newEntry = await createJournalEntry(user?.id || "", entry.content, entry.mood || "", entry.tags)
 
-        if (response.ok) {
-          const { entry: newEntry } = await response.json()
+        if (newEntry) {
           setJournalEntries(prev => [newEntry, ...prev])
         }
       }
@@ -288,11 +263,9 @@ export default function WellnessCompanion() {
 
   const handleDeleteJournalEntry = async (entryId: string) => {
     try {
-      const response = await fetch(`/api/journal-entries/${entryId}`, {
-        method: 'DELETE',
-      })
+      const deletedEntry = await deleteJournalEntry(entryId)
 
-      if (response.ok) {
+      if (deletedEntry) {
         setJournalEntries(prev => prev.filter(entry => entry.id !== entryId))
       }
     } catch (error) {
@@ -883,7 +856,7 @@ export default function WellnessCompanion() {
                   try {
                     // Delete all entries from database
                     for (const entry of journalEntries) {
-                      await fetch(`/api/journal-entries/${entry.id}`, { method: 'DELETE' })
+                      await deleteJournalEntry(entry.id)
                     }
                     setJournalEntries([])
                     setMessages([])

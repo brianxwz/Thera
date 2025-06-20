@@ -1037,7 +1037,7 @@ export default function WellnessCompanion() {
 
       <AuthModal isOpen={showAuthModal} onClose={() => setShowAuthModal(false)} />
 
-      <PricingModal isOpen={showPricingModal} onClose={() => setShowPricingModal(false)} onUpgrade={handleUpgrade} />
+      {/*<PricingModal isOpen={showPricingModal} onClose={() => setShowPricingModal(false)} />*/}
 
       {/* New Chat Confirmation Dialog */}
       <Dialog open={showNewChatDialog} onOpenChange={setShowNewChatDialog}>

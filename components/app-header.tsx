@@ -24,7 +24,7 @@ interface AppHeaderProps {
 
 export function AppHeader({
   onLoginClick,
-  onPricingClick,
+  onPricingClick, // eslint-disable-line @typescript-eslint/no-unused-vars
   onMenuClick,
   isPremium = false,
   isDarkMode = true,
@@ -84,13 +84,13 @@ export function AppHeader({
                 >
                   {isDarkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
                 </Button>
-                <Button
+                {/*<Button
                   variant="ghost"
                   onClick={onPricingClick}
                   className="hidden sm:flex text-gray-600 hover:text-purple-600 dark:text-gray-300 dark:hover:text-purple-400"
                 >
                   Pricing
-                </Button>
+                </Button>*/}
                 <Button
                   variant="outline"
                   onClick={onLoginClick}
@@ -132,7 +132,7 @@ export function AppHeader({
                       </p>
                     </div>
                     <DropdownMenuSeparator />
-                    {!isPremium && (
+                    {/*{!isPremium && (
                       <>
                         <DropdownMenuItem onClick={onPricingClick}>
                           <Crown className="mr-2 h-4 w-4" />
@@ -140,7 +140,7 @@ export function AppHeader({
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
                       </>
-                    )}
+                    )}*/}
                     <DropdownMenuItem>
                       <Settings className="mr-2 h-4 w-4" />
                       <span>Settings</span>

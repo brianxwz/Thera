@@ -26,4 +26,5 @@ export interface NavigationItem {
   label: string
   icon: React.ComponentType<{ className?: string }>
   badge?: number
+  href: string
 } 

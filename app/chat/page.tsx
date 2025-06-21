@@ -21,6 +21,7 @@ import {
   Bot,
   Plus,
   BookOpen,
+  Lock,
 } from "lucide-react"
 
 export default function ChatPage() {
@@ -191,10 +192,10 @@ export default function ChatPage() {
                     variant="secondary"
                     size="sm"
                     className="bg-white/20 border-white/30 text-white hover:bg-white/30"
-                    disabled={messages.length === 0 || isGeneratingEntry || messages.length === lastSavedMessageCount}
+                    disabled={messages.length === 0 || isGeneratingEntry || messages.length === lastSavedMessageCount || !isAuthenticated}
                   >
                     <BookOpen className="h-4 w-4 mr-2" />
-                    Save as Journal Entry
+                    {isAuthenticated ? "Save as Journal Entry" : "Sign In to Save"}
                   </Button>
                 </div>
               </div>
@@ -222,6 +223,16 @@ export default function ChatPage() {
             {/* Chat Area */}
             <div className="flex-1 bg-gradient-to-b from-gray-50 to-white dark:from-gray-700 dark:to-gray-800">
               <ScrollArea className="h-full p-6">
+                {/* Authentication Notice */}
+                {!isAuthenticated && (
+                  <div className="mb-4 p-3 bg-amber-50 border border-amber-200 rounded-lg dark:bg-amber-900/20 dark:border-amber-800">
+                    <div className="flex items-center gap-2 text-amber-700 dark:text-amber-300">
+                      <Lock className="h-4 w-4" />
+                      <span className="text-sm font-medium">Sign in to save conversations as journal entries</span>
+                    </div>
+                  </div>
+                )}
+
                 {messages.length === 0 && (
                   <div className="text-center py-12">
                     <div className="w-20 h-20 mx-auto bg-gradient-to-r from-purple-400 to-pink-400 rounded-full flex items-center justify-center shadow-lg mb-6">
@@ -343,8 +354,8 @@ export default function ChatPage() {
             <Button variant="outline" onClick={() => handleNewChatConfirm(false)}>
               Don't Save
             </Button>
-            <Button onClick={() => handleNewChatConfirm(true)} disabled={messages.length === 0 || isGeneratingEntry || messages.length === lastSavedMessageCount}>
-              Save as Journal Entry
+            <Button onClick={() => handleNewChatConfirm(true)} disabled={messages.length === 0 || isGeneratingEntry || messages.length === lastSavedMessageCount || !isAuthenticated}>
+              {isAuthenticated ? "Save as Journal Entry" : "Sign In to Save"}
             </Button>
           </div>
         </DialogContent>

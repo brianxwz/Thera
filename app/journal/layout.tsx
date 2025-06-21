@@ -1,22 +1,13 @@
-import type { Metadata } from "next"
+import { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: "My Journal - Wellness Tracking",
-  description: "Track your wellness journey with smart journaling. Automatically capture insights from conversations or write manual entries to monitor your mental health progress.",
-  keywords: [
-    "wellness journal",
-    "mental health journal",
-    "journaling app",
-    "wellness tracking",
-    "mental health tracking",
-    "mood journal",
-    "emotional wellness",
-    "self-reflection",
-  ],
+  title: "Journal - Your Personal Wellness Companion",
+  description: "Track your wellness journey with our smart journaling feature. Automatically capture insights from conversations or write manual entries to monitor your mental health progress.",
+  keywords: "journal, wellness, mental health, mood tracking, self-reflection, personal growth",
   openGraph: {
-    title: "My Journal - Wellness Tracking",
-    description: "Track your wellness journey with smart journaling. Automatically capture insights from conversations or write manual entries to monitor your mental health progress.",
-    url: "https://liorajournal.com/journal",
+    title: "Journal - Your Personal Wellness Companion",
+    description: "Track your wellness journey with our smart journaling feature. Automatically capture insights from conversations or write manual entries to monitor your mental health progress.",
+    type: "website",
   },
 }
 

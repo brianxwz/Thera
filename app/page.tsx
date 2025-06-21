@@ -233,7 +233,7 @@ export default function HomePage() {
                       </div>
                       <h4 className="text-2xl font-bold text-gray-800 mb-4 dark:text-white">Start feeling better today</h4>
                       <p className="text-gray-600 mb-6 dark:text-gray-300">
-                        Join thousands who have found support and growth through our wellness companion.
+                        Join others who have found support and growth through our wellness companion.
                       </p>
                       <Button
                         onClick={() => window.location.href = '/chat'}

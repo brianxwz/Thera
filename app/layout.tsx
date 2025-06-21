@@ -93,7 +93,6 @@ export default function RootLayout({
     <html lang="en" className="dark">
       <head>
         <link rel="icon" href="/logo.png" type="image/png" />
-        <link rel="alternate icon" href="/favicon.ico" />
         <link rel="manifest" href="/site.webmanifest" />
         <meta name="theme-color" content="#8b5cf6" />
         <meta name="msapplication-TileColor" content="#8b5cf6" />

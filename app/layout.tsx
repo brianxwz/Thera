@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { SupabaseAuthProvider } from "@/components/supabase-auth-provider";
 import { MainNavigation } from "@/components/main-navigation";
+import { Footer } from "@/components/footer";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -130,10 +131,13 @@ export default function RootLayout({
       </head>
       <body className={inter.className}>
         <SupabaseAuthProvider>
-          <div className="min-h-screen bg-gradient-to-br from-violet-50 via-purple-50 to-pink-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+          <div className="min-h-screen bg-gradient-to-br from-violet-50 via-purple-50 to-pink-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 flex flex-col">
             <MainNavigation />
-            <div className="lg:ml-16">
-              {children}
+            <div className="lg:ml-16 flex-1 flex flex-col">
+              <div className="flex-1">
+                {children}
+              </div>
+              <Footer />
             </div>
           </div>
         </SupabaseAuthProvider>

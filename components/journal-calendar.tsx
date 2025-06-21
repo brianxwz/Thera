@@ -5,17 +5,16 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { JournalEntry } from "@/lib/types"
-import { ChevronLeft, ChevronRight, Calendar, Plus, Lock } from "lucide-react"
+import { ChevronLeft, ChevronRight, Calendar, Lock } from "lucide-react"
 
 interface JournalCalendarProps {
   entries: JournalEntry[]
   selectedDate: Date
   onDateSelect: (date: Date) => void
-  onNewEntry: () => void
   isAuthenticated?: boolean
 }
 
-export function JournalCalendar({ entries, selectedDate, onDateSelect, onNewEntry, isAuthenticated = true }: JournalCalendarProps) {
+export function JournalCalendar({ entries, selectedDate, onDateSelect, isAuthenticated = true }: JournalCalendarProps) {
   const [currentMonth, setCurrentMonth] = useState(new Date())
 
   // Group entries by date

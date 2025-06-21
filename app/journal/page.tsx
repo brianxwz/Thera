@@ -186,7 +186,6 @@ export default function JournalPage() {
                       entries={journalEntries}
                       selectedDate={selectedDate}
                       onDateSelect={handleDateSelect}
-                      onNewEntry={handleNewEntry}
                       isAuthenticated={isAuthenticated}
                     />
                   </div>

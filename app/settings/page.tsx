@@ -4,7 +4,6 @@ import React from "react"
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
-import { useAuth } from "@/components/supabase-auth-provider"
 import { deleteJournalEntry, getJournalEntries } from "@/lib/journal"
 import { JournalEntry } from "@/lib/types"
 import {
@@ -13,9 +12,6 @@ import {
 
 export default function SettingsPage() {
   const [journalEntries, setJournalEntries] = useState<JournalEntry[]>([])
-  const [isDarkMode, setIsDarkMode] = useState(true) // Default to dark mode
-
-  const { user, isAuthenticated } = useAuth()
 
   // Fetch journal entries for data management
   const fetchJournalEntries = async () => {
@@ -32,14 +28,6 @@ export default function SettingsPage() {
   React.useEffect(() => {
     fetchJournalEntries()
   }, [])
-
-  React.useEffect(() => {
-    if (isDarkMode) {
-      document.documentElement.classList.add("dark")
-    } else {
-      document.documentElement.classList.remove("dark")
-    }
-  }, [isDarkMode])
 
   return (
     <main>

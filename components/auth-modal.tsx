@@ -439,26 +439,6 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
         </Tabs>
 
         {/* Premium Features Preview */}
-        <Card className="mt-3 bg-gradient-to-r from-yellow-50 to-orange-50 border-yellow-200">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm flex items-center gap-2">
-              <Crown className="h-4 w-4 text-yellow-600" />
-              Premium Features
-            </CardTitle>
-            <CardDescription className="text-xs">Unlock the full potential of your wellness journey</CardDescription>
-          </CardHeader>
-          <CardContent className="pt-0">
-            <div className="grid grid-cols-2 gap-1 text-xs">
-              {premiumFeatures.slice(0, 4).map((feature, index) => (
-                <div key={index} className="flex items-center gap-1">
-                  <Check className="h-3 w-3 text-green-600 flex-shrink-0" />
-                  <span className="text-gray-700 truncate">{feature}</span>
-                </div>
-              ))}
-            </div>
-            <p className="text-xs text-gray-600 mt-2">Start free, upgrade anytime for $9.99/month</p>
-          </CardContent>
-        </Card>
       </DialogContent>
     </Dialog>
   )

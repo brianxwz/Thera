@@ -1,4 +1,5 @@
 import { supabase } from "./supabase"
+import { Message } from "./types"
 
 export async function createJournalEntry(userId: string, content: string, mood: string, tags: string[], conversationId?: string | null) {
   const { data: entry, error } = await supabase
@@ -39,7 +40,7 @@ export async function createConversation(userId: string, mood?: string) {
   return conversation
 }
 
-export async function saveConversationMessages(conversationId: string, messages: any[]) { // eslint-disable-line @typescript-eslint/no-explicit-any
+export async function saveConversationMessages(conversationId: string, messages: Message[]) {
   const { error } = await supabase
     .from('conversation_messages')
     .insert(

@@ -4,7 +4,7 @@ import React, { useState } from "react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { JournalEntry } from "@/lib/types"
+import { JournalEntry, ConversationMessage } from "@/lib/types"
 import { Edit3, Trash2, Clock, Calendar, Lock, MessageCircle, X, User, Bot } from "lucide-react"
 import { getConversationMessages } from "@/lib/journal"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
@@ -27,7 +27,7 @@ export function JournalDayView({
   isAuthenticated = true
 }: JournalDayViewProps) {
   const [viewingConversation, setViewingConversation] = useState<string | null>(null)
-  const [conversationMessages, setConversationMessages] = useState<any[]>([]) // eslint-disable-line @typescript-eslint/no-explicit-any
+  const [conversationMessages, setConversationMessages] = useState<ConversationMessage[]>([])
   const [loadingConversation, setLoadingConversation] = useState(false)
 
   // Filter entries for the selected date

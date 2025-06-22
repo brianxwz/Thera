@@ -10,7 +10,7 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog"
 import { useAuth } from "@/components/supabase-auth-provider"
-import { createJournalEntry, getJournalEntries } from "@/lib/journal"
+import { createJournalEntry, getJournalEntries, createConversation, saveConversationMessages } from "@/lib/journal"
 import { JournalEntry, Message, MoodOption } from "@/lib/types"
 import {
   Heart,
@@ -75,8 +75,18 @@ export default function ChatPage() {
 
       const { entry } = await response.json()
 
-      // Save to database instead of localStorage
-      const savedEntry = await createJournalEntry(user?.id || "", entry, currentMood, extractTags(entry), Date.now().toString())
+      // Create a new conversation record
+      const conversationRecord = await createConversation(user?.id || "", currentMood)
+      
+      if (!conversationRecord) {
+        throw new Error('Failed to create conversation')
+      }
+
+      // Save conversation messages to database
+      await saveConversationMessages(conversationRecord.id, conversation)
+
+      // Save to database with conversation ID
+      const savedEntry = await createJournalEntry(user?.id || "", entry, currentMood, extractTags(entry), conversationRecord.id)
 
       if (savedEntry) {
         setJournalEntries(prev => [savedEntry, ...prev])

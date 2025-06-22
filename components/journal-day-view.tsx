@@ -1,11 +1,13 @@
 "use client"
 
-import React from "react"
+import React, { useState } from "react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { JournalEntry } from "@/lib/types"
-import { Edit3, Trash2, Clock, Calendar, Lock } from "lucide-react"
+import { Edit3, Trash2, Clock, Calendar, Lock, MessageCircle, X, User, Bot } from "lucide-react"
+import { getConversationMessages } from "@/lib/journal"
+import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 
 interface JournalDayViewProps {
   entries: JournalEntry[]
@@ -24,6 +26,10 @@ export function JournalDayView({
   onNewEntry,
   isAuthenticated = true
 }: JournalDayViewProps) {
+  const [viewingConversation, setViewingConversation] = useState<string | null>(null)
+  const [conversationMessages, setConversationMessages] = useState<any[]>([])
+  const [loadingConversation, setLoadingConversation] = useState(false)
+
   // Filter entries for the selected date
   const dayEntries = entries.filter(entry => {
     const entryDate = new Date(entry.created_at)
@@ -58,6 +64,32 @@ export function JournalDayView({
         year: "numeric"
       })
     }
+  }
+
+  const handleViewConversation = async (conversationId: string) => {
+    if (viewingConversation === conversationId) {
+      setViewingConversation(null)
+      setConversationMessages([])
+      return
+    }
+
+    setLoadingConversation(true)
+    try {
+      const messages = await getConversationMessages(conversationId)
+      if (messages) {
+        setConversationMessages(messages)
+        setViewingConversation(conversationId)
+      }
+    } catch (error) {
+      console.error('Error fetching conversation:', error)
+    } finally {
+      setLoadingConversation(false)
+    }
+  }
+
+  const handleHideConversation = async () => {
+    setViewingConversation(null)
+    setConversationMessages([])
   }
 
   return (
@@ -143,6 +175,17 @@ export function JournalDayView({
                         )}
                         {isAuthenticated && (
                           <div className="opacity-0 group-hover:opacity-100 transition-opacity flex gap-1">
+                            {entry.conversation_id && (
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={() => handleViewConversation(entry.conversation_id!)}
+                                className="h-7 w-7 p-0"
+                                disabled={loadingConversation}
+                              >
+                                <MessageCircle className="h-3 w-3" />
+                              </Button>
+                            )}
                             <Button
                               size="sm"
                               variant="outline"
@@ -167,6 +210,57 @@ export function JournalDayView({
                     <p className="text-gray-700 leading-relaxed mb-3 whitespace-pre-wrap dark:text-gray-200">
                       {entry.content}
                     </p>
+
+                    {/* Conversation Messages */}
+                    {entry.conversation_id && viewingConversation === entry.conversation_id && (
+                      <div className="mt-4 p-4 bg-gray-50 rounded-lg border dark:bg-gray-700 dark:border-gray-600">
+                        <div className="flex items-center justify-between mb-3">
+                          <h4 className="text-sm font-semibold text-gray-700 dark:text-gray-200 flex items-center gap-2">
+                            <MessageCircle className="h-4 w-4" />
+                            Original Conversation
+                          </h4>
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={handleHideConversation}
+                            className="h-6 w-6 p-0"
+                          >
+                            <X className="h-3 w-3" />
+                          </Button>
+                        </div>
+                        <div className="space-y-3 max-h-64 overflow-y-auto">
+                          {conversationMessages.map((message, index) => (
+                            <div
+                              key={index}
+                              className={`flex gap-3 ${message.role === "user" ? "flex-row-reverse" : "flex-row"}`}
+                            >
+                              <Avatar className="w-6 h-6 shadow-sm">
+                                <AvatarFallback
+                                  className={
+                                    message.role === "user"
+                                      ? "bg-gradient-to-r from-blue-500 to-purple-500 text-white text-xs"
+                                      : "bg-gradient-to-r from-pink-500 to-purple-500 text-white text-xs"
+                                  }
+                                >
+                                  {message.role === "user" ? <User className="h-3 w-3" /> : <Bot className="h-3 w-3" />}
+                                </AvatarFallback>
+                              </Avatar>
+                              <div className={`max-w-[80%] ${message.role === "user" ? "text-right" : "text-left"}`}>
+                                <div
+                                  className={`inline-block p-2 rounded-lg text-sm ${
+                                    message.role === "user"
+                                      ? "bg-gradient-to-r from-blue-500 to-purple-500 text-white"
+                                      : "bg-white border border-gray-200 text-gray-800 dark:bg-gray-600 dark:border-gray-500 dark:text-white"
+                                  }`}
+                                >
+                                  {message.content}
+                                </div>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
 
                     {entry.tags.length > 0 && (
                       <div className="flex flex-wrap gap-2">

@@ -9,6 +9,23 @@ export interface JournalEntry {
   updated_at: string
 }
 
+export interface Conversation {
+  id: string
+  user_id: string
+  title?: string
+  mood?: string
+  created_at: string
+  updated_at: string
+}
+
+export interface ConversationMessage {
+  id: string
+  conversation_id: string
+  role: 'user' | 'assistant' | 'system'
+  content: string
+  created_at: string
+}
+
 export interface Message {
   role: 'user' | 'assistant' | 'system' | 'data'
   content: string

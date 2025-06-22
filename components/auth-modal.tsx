@@ -8,8 +8,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Heart, Mail, Lock, User, Check, Crown, AlertCircle } from "lucide-react"
+import { Heart, Mail, Lock, User, AlertCircle } from "lucide-react"
 import { supabase } from "@/lib/supabase"
 import { useAuth } from "@/components/supabase-auth-provider"
 
@@ -149,7 +148,7 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
     setError("")
   }
 
-  const premiumFeatures = [
+  /*const premiumFeatures = [
     "Unlimited journal entries",
     "Advanced mood analytics",
     "Export your data",
@@ -158,7 +157,7 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
     "Mood trend visualizations",
     "Backup & sync across devices",
     "Advanced search & filtering",
-  ]
+  ]*/
 
   // Optionally, auto-close modal if already authenticated
   if (isAuthenticated && isOpen) {

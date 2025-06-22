@@ -27,7 +27,7 @@ export function JournalDayView({
   isAuthenticated = true
 }: JournalDayViewProps) {
   const [viewingConversation, setViewingConversation] = useState<string | null>(null)
-  const [conversationMessages, setConversationMessages] = useState<any[]>([])
+  const [conversationMessages, setConversationMessages] = useState<any[]>([]) // eslint-disable-line @typescript-eslint/no-explicit-any
   const [loadingConversation, setLoadingConversation] = useState(false)
 
   // Filter entries for the selected date

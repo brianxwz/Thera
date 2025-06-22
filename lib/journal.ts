@@ -39,7 +39,7 @@ export async function createConversation(userId: string, mood?: string) {
   return conversation
 }
 
-export async function saveConversationMessages(conversationId: string, messages: any[]) {
+export async function saveConversationMessages(conversationId: string, messages: any[]) { // eslint-disable-line @typescript-eslint/no-explicit-any
   const { error } = await supabase
     .from('conversation_messages')
     .insert(
